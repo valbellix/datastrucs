@@ -6,6 +6,9 @@
 #define LOAD_FACTOR 2
 #define INITIAL_CAPACITY 2
 
+// this should be make things more readable, it returns the pointer to the item at position POS
+#define VECT_AT(THIS, POS) THIS->store + (POS * THIS->element_size)
+
 struct ds_vect {
 	char* store;
 	size_t capacity;
@@ -21,6 +24,21 @@ static ds_result expand(ds_vect* this) {
 		return SUCCESS;
 
 	size_t newCapacity = this->factor * this->capacity;
+	char* data = realloc(this->store, newCapacity * this->element_size);
+	if (data == NULL)
+		return GENERIC_ERROR;
+
+	this->store = data;
+	this->capacity = newCapacity;
+
+	return SUCCESS;
+}
+
+static ds_result shrink(ds_vect* this) {
+	if ((this->usedLength - 1) > this->capacity/2)
+		return SUCCESS;
+
+	size_t newCapacity = this->capacity / this->factor;
 	char* data = realloc(this->store, newCapacity * this->element_size);
 	if (data == NULL)
 		return GENERIC_ERROR;
@@ -58,7 +76,7 @@ void delete_ds_vect(ds_vect* this) {
 
 int ds_vect_exists(const ds_vect* this, const void* element) {
 	for (size_t i = 0; i < this->usedLength; ++i) {
-		if (this->compare(this->store + (i * this->element_size), element) == 0)
+		if (this->compare(VECT_AT(this, i), element) == 0)
 			return 1;
 	}
 
@@ -69,7 +87,7 @@ ds_result ds_vect_at(const ds_vect* this, const size_t pos, void* out) {
 	if (pos >= this->usedLength)
 		return OUT_OF_BOUND;
 
-	memcpy(out, this->store + (this->element_size * pos), this->element_size);
+	memcpy(out, VECT_AT(this, pos), this->element_size);
 	return SUCCESS;
 }
 
@@ -78,7 +96,7 @@ ds_result ds_vect_add(ds_vect* this, const void* element) {
 	if (res != SUCCESS)
 		return res;
 
-	memcpy(this->store + (this->usedLength * this->element_size), element, this->element_size);
+	memcpy(VECT_AT(this, this->usedLength), element, this->element_size);
 	this->usedLength++;
 
 	return SUCCESS;
@@ -89,15 +107,15 @@ size_t ds_vect_length(const ds_vect* this) {
 }
 
 ds_result ds_vect_set(ds_vect* this, const void* element, const size_t pos) {
-	if (pos >= this->usedLength) {
+	if (pos >= this->usedLength)
 		return OUT_OF_BOUND;
-	}
 
-	memcpy(this->store + (pos * this->element_size), element, this->element_size);
+	memcpy(VECT_AT(this, pos), element, this->element_size);
 	return SUCCESS;
 }
 
-ds_result ds_vect_remove(ds_vect* v, const void* element) {
+ds_result ds_vect_remove(ds_vect* this, const size_t pos) {
 	// TODO
+
 	return GENERIC_ERROR;
 }

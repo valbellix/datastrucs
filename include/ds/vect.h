@@ -14,7 +14,7 @@ size_t ds_vect_length(const ds_vect* v);
 ds_result ds_vect_at(const ds_vect* v, const size_t pos, void* out);
 int ds_vect_exists(const ds_vect* v, const void* element);
 ds_result ds_vect_add(ds_vect* v, const void* element);
-ds_result ds_vect_remove(ds_vect* v, const void* element);
+ds_result ds_vect_remove(ds_vect* v, const size_t pos);
 ds_result ds_vect_set(ds_vect* v, const void* element, const size_t pos);
 
 #endif
