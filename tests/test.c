@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	ds_vect_remove(v, 1);
+	ds_vect_remove(v, 1);
 	for (size_t i = 0; i < ds_vect_length(v); i++) {
 		int val;
 		ds_vect_at(v, i, &val);

@@ -118,11 +118,12 @@ ds_result ds_vect_remove(ds_vect* this, const size_t pos) {
 	if (pos >= this->usedLength)
 		return OUT_OF_BOUND;
 
-	size_t sizeToMove = (this->capacity - pos) * this->element_size;
-	memmove(VECT_AT(this, pos), VECT_AT(this, pos + 1), sizeToMove);
+	if (pos != this->usedLength - 1) {
+		size_t sizeToMove = (this->capacity - pos) * this->element_size;
+		memmove(VECT_AT(this, pos), VECT_AT(this, pos + 1), sizeToMove);
+	}
 
 	this->usedLength--;
-	// set to zero the last element
 
 	return GENERIC_ERROR;
 }
