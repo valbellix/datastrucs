@@ -43,9 +43,7 @@ int main(int argc, char* argv[]) {
 	if (!ds_vect_exists(v, &doesNotExist))
 		printf("does not exist!\n");
 
-	size_t len = ds_vect_length(v);
-	for (size_t i = 0; i < len; i++)
-	{
+	for (size_t i = 0; i < ds_vect_length(v); i++) {
 		int val;
 		ds_vect_at(v, i, &val);
 		printf("[%d] -> %d\n", i, val);
@@ -57,6 +55,20 @@ int main(int argc, char* argv[]) {
 	int val;
 	ds_vect_at(v, 2, &val);
 	printf("%d\n", val);
+
+	for (size_t i = 0; i < ds_vect_length(v); i++) {
+		int val;
+		ds_vect_at(v, i, &val);
+		printf("[%d] -> %d\n", i, val);
+	}
+
+	ds_vect_remove(v, 1);
+	ds_vect_remove(v, 1);
+	for (size_t i = 0; i < ds_vect_length(v); i++) {
+		int val;
+		ds_vect_at(v, i, &val);
+		printf("[%d] -> %d\n", i, val);
+	}
 
 	delete_ds_vect(v);
 

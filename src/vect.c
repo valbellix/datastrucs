@@ -7,7 +7,7 @@
 #define INITIAL_CAPACITY 2
 
 // this should be make things more readable, it returns the pointer to the item at position POS
-#define VECT_AT(THIS, POS) THIS->store + (POS * THIS->element_size)
+#define VECT_AT(THIS, POS) THIS->store + ((POS) * THIS->element_size)
 
 struct ds_vect {
 	char* store;
@@ -115,7 +115,15 @@ ds_result ds_vect_set(ds_vect* this, const void* element, const size_t pos) {
 }
 
 ds_result ds_vect_remove(ds_vect* this, const size_t pos) {
-	// TODO
+	if (pos >= this->usedLength)
+		return OUT_OF_BOUND;
+
+	if (pos != this->usedLength - 1) {
+		size_t sizeToMove = (this->capacity - pos) * this->element_size;
+		memmove(VECT_AT(this, pos), VECT_AT(this, pos + 1), sizeToMove);
+	}
+
+	this->usedLength--;
 
 	return GENERIC_ERROR;
 }
