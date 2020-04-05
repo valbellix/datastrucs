@@ -125,7 +125,7 @@ ds_vect_iterator ds_vect_end(const ds_vect* this) {
 	return create_iterator(this, this->size-1);
 }
 
-ds_result ds_vect_add(ds_vect* this, const void* element) {
+ds_result ds_vect_push_back(ds_vect* this, const void* element) {
 	ds_result res = expand(this);
 	if (res != SUCCESS)
 		return res;

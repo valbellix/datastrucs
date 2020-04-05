@@ -20,8 +20,8 @@ int main(int argc, char* argv[]) {
 	printf("test adding elements\n");
 	int one = 123;
 	int two = 456;
-	ds_vect_add(v, &one);
-	ds_vect_add(v, &two);
+	ds_vect_push_back(v, &one);
+	ds_vect_push_back(v, &two);
 
 	ds_vect_iterator it0 = ds_vect_at(v, 0);
 	ds_vect_iterator it1 = ds_vect_at(v, 1);
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 	printf("two -> %d\n", *((int*)ds_vect_iterator_get(&it1)));
 
 	int three = 789;
-	ds_vect_add(v, &three);
+	ds_vect_push_back(v, &three);
 	ds_vect_iterator it2 = ds_vect_at(v, 2);
 
 	printf("three -> %d\n", *((int*)ds_vect_iterator_get(&it2)));

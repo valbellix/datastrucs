@@ -29,7 +29,7 @@ ds_vect_iterator ds_vect_begin(const ds_vect* v);
 ds_vect_iterator ds_vect_end(const ds_vect* v);
 
 int ds_vect_exists(const ds_vect* v, const void* element);
-ds_result ds_vect_add(ds_vect* v, const void* element);
+ds_result ds_vect_push_back(ds_vect* v, const void* element);
 ds_result ds_vect_remove(ds_vect* v, const size_t pos);
 ds_result ds_vect_set(ds_vect* v, const void* element, const size_t pos);
 
