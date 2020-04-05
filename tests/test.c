@@ -17,58 +17,50 @@ int intCmp(const void* e1, const void* e2) {
 int main(int argc, char* argv[]) {
 	ds_vect* v = create_ds_vect(intCmp, sizeof(int));
 
+	printf("test adding elements\n");
 	int one = 123;
 	int two = 456;
 	ds_vect_add(v, &one);
 	ds_vect_add(v, &two);
 
-	int out = 0;
-	int out2 = 0;
-	ds_vect_at(v, 0, &out);
-	ds_vect_at(v, 1, &out2);
+	ds_vect_iterator it0 = ds_vect_at(v, 0);
+	ds_vect_iterator it1 = ds_vect_at(v, 1);
 
-	printf("one -> %d\n", out);
-	printf("two -> %d\n", out2);
+	printf("one -> %d\n", *((int*)ds_vect_iterator_get(&it0)));
+	printf("two -> %d\n", *((int*)ds_vect_iterator_get(&it1)));
 
 	int three = 789;
 	ds_vect_add(v, &three);
+	ds_vect_iterator it2 = ds_vect_at(v, 2);
 
-	int out3 = 0;
-	ds_vect_at(v, 2, &out3);
-	printf("three -> %d\n", out3);
+	printf("three -> %d\n", *((int*)ds_vect_iterator_get(&it2)));
 
+	printf("test element existence\t");
 	int doesNotExist = 1000;
 	if (ds_vect_exists(v, &one))
 		printf("exists!\n");
 	if (!ds_vect_exists(v, &doesNotExist))
 		printf("does not exist!\n");
 
-	for (size_t i = 0; i < ds_vect_length(v); i++) {
-		int val;
-		ds_vect_at(v, i, &val);
-		printf("[%d] -> %d\n", i, val);
-	}
+	printf("test forward iteration\n");
+	for (ds_vect_iterator it = ds_vect_begin(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
+		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
+	printf("test backward iteration\n");
+	for (ds_vect_iterator it = ds_vect_end(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_prev(&it))
+		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
+
+	printf("test insert at given position\n");
 	int anotherValue = 555;
 	ds_vect_set(v, &anotherValue, 2);
+	it2 = ds_vect_at(v, 2);
+	printf("[%d] -> %d\n", 2, *((int*)ds_vect_iterator_get(&it2)));
 
-	int val;
-	ds_vect_at(v, 2, &val);
-	printf("%d\n", val);
-
-	for (size_t i = 0; i < ds_vect_length(v); i++) {
-		int val;
-		ds_vect_at(v, i, &val);
-		printf("[%d] -> %d\n", i, val);
-	}
-
+	printf("test remove\n");
 	ds_vect_remove(v, 1);
 	ds_vect_remove(v, 1);
-	for (size_t i = 0; i < ds_vect_length(v); i++) {
-		int val;
-		ds_vect_at(v, i, &val);
-		printf("[%d] -> %d\n", i, val);
-	}
+	for (ds_vect_iterator it = ds_vect_begin(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
+		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	delete_ds_vect(v);
 
