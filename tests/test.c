@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ds/vect.h>
+#include <ds/defs.h>
 
 int intCmp(const void* e1, const void* e2) {
 	const int* i1 = (int*) e1;
@@ -14,7 +15,11 @@ int intCmp(const void* e1, const void* e2) {
 		return 1;
 }
 
-int main(int argc, char* argv[]) {
+void print_element(const ds_vect_iterator* it) {
+	printf("[%d] -> %d\n", it->pos, *((int*)ds_vect_iterator_get(it)));
+}
+
+int test_vector() {
 	ds_vect* v = create_ds_vect(intCmp, sizeof(int));
 
 	printf("test adding elements\n");
@@ -56,6 +61,12 @@ int main(int argc, char* argv[]) {
 	it2 = ds_vect_at(v, 2);
 	printf("[%d] -> %d\n", 2, *((int*)ds_vect_iterator_get(&it2)));
 
+	printf("test do things forward\n");
+	ds_vect_do(v, print_element, ds_vect_begin(v), ds_vect_length(v), FORWARD);
+
+	printf("test do things backward\n");
+	ds_vect_do(v, print_element, ds_vect_end(v), ds_vect_length(v), BACKWARD);
+
 	printf("test remove\n");
 	ds_vect_remove(v, 1);
 	ds_vect_remove(v, 1);
@@ -63,6 +74,12 @@ int main(int argc, char* argv[]) {
 		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	delete_ds_vect(v);
+
+	return 0;
+}
+
+int main() {
+	test_vector();
 
 	return 0;
 }

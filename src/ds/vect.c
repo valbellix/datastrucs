@@ -17,7 +17,7 @@ struct ds_vect {
 	size_t factor;
 	size_t element_size;
 
-	ds_vect_cmp compare;
+	ds_cmp compare;
 };
 
 // Some helpers
@@ -79,7 +79,7 @@ const void* ds_vect_iterator_get(ds_vect_iterator* it) {
 	return ((const void*) VECT_AT(it->v, it->pos));
 }
 
-ds_vect* create_ds_vect(ds_vect_cmp func, const size_t element_size) {
+ds_vect* create_ds_vect(ds_cmp func, const size_t element_size) {
 	ds_vect* v = (ds_vect*) malloc(sizeof(ds_vect));
 
 	v->capacity = INITIAL_CAPACITY;
@@ -160,4 +160,23 @@ ds_result ds_vect_remove(ds_vect* this, const size_t pos) {
 	this->size--;
 
 	return GENERIC_ERROR;
+}
+
+void ds_vect_do(ds_vect* this,
+                void (*do_something)(const ds_vect_iterator*),
+                ds_vect_iterator begin,
+                const size_t number_of_elements,
+                ds_direction direction)
+{
+	void (*nextElement)(ds_vect_iterator*) = ds_vect_iterator_next;
+	if (direction == BACKWARD)
+		nextElement = ds_vect_iterator_prev;
+
+	size_t counter = 0;
+	while (counter < number_of_elements && ds_vect_iterator_is_valid(&begin)) {
+		do_something(&begin);
+
+		nextElement(&begin);
+		counter++;
+	}
 }
