@@ -1,7 +1,9 @@
+#include <ds/vect.h>
+#include <ds/list.h>
+#include <ds/defs.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <ds/vect.h>
-#include <ds/defs.h>
 
 int intCmp(const void* e1, const void* e2) {
 	const int* i1 = (int*) e1;
@@ -78,8 +80,27 @@ int test_vector() {
 	return 0;
 }
 
+int test_list() {
+	ds_list* l = create_ds_list(intCmp, sizeof(int));
+
+	printf("test adding elements at list front\n");
+	int one = 123;
+	int two = 456;
+
+	ds_list_push_front(l, &one);
+	ds_list_push_front(l, &two);
+
+	printf("test forward iteration\n");
+	int counter = 0;
+	for (ds_list_iterator it = ds_list_first(l); ds_list_iterator_is_valid(&it); ds_list_iterator_next(&it))
+		printf("[%d] -> %d\n", counter++, *((int*)ds_list_iterator_get(&it)));
+
+	delete_ds_list(l);
+}
+
 int main() {
 	test_vector();
+	test_list();
 
 	return 0;
 }
