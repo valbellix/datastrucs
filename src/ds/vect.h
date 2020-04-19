@@ -26,8 +26,8 @@ void delete_ds_vect(ds_vect* v);
 
 size_t ds_vect_length(const ds_vect* v);
 ds_vect_iterator ds_vect_at(const ds_vect* v, const size_t pos);
-ds_vect_iterator ds_vect_begin(const ds_vect* v);
-ds_vect_iterator ds_vect_end(const ds_vect* v);
+ds_vect_iterator ds_vect_first(const ds_vect* v);
+ds_vect_iterator ds_vect_last(const ds_vect* v);
 
 int ds_vect_exists(const ds_vect* v, const void* element);
 ds_result ds_vect_push_back(ds_vect* v, const void* element);

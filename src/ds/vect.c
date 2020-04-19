@@ -117,11 +117,11 @@ ds_vect_iterator ds_vect_at(const ds_vect* this, const size_t pos) {
 	return create_iterator(this, pos);
 }
 
-ds_vect_iterator ds_vect_begin(const ds_vect* this) {
+ds_vect_iterator ds_vect_first(const ds_vect* this) {
 	return create_iterator(this, 0);
 }
 
-ds_vect_iterator ds_vect_end(const ds_vect* this) {
+ds_vect_iterator ds_vect_last(const ds_vect* this) {
 	return create_iterator(this, this->size-1);
 }
 

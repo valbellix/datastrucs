@@ -48,11 +48,11 @@ int test_vector() {
 		printf("does not exist!\n");
 
 	printf("test forward iteration\n");
-	for (ds_vect_iterator it = ds_vect_begin(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
+	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
 		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	printf("test backward iteration\n");
-	for (ds_vect_iterator it = ds_vect_end(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_prev(&it))
+	for (ds_vect_iterator it = ds_vect_last(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_prev(&it))
 		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	printf("test insert at given position\n");
@@ -62,15 +62,15 @@ int test_vector() {
 	printf("[%d] -> %d\n", 2, *((int*)ds_vect_iterator_get(&it2)));
 
 	printf("test do things forward\n");
-	ds_vect_do(v, print_element, ds_vect_begin(v), ds_vect_length(v), FORWARD);
+	ds_vect_do(v, print_element, ds_vect_first(v), ds_vect_length(v), FORWARD);
 
 	printf("test do things backward\n");
-	ds_vect_do(v, print_element, ds_vect_end(v), ds_vect_length(v), BACKWARD);
+	ds_vect_do(v, print_element, ds_vect_last(v), ds_vect_length(v), BACKWARD);
 
 	printf("test remove\n");
 	ds_vect_remove(v, 1);
 	ds_vect_remove(v, 1);
-	for (ds_vect_iterator it = ds_vect_begin(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
+	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
 		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	delete_ds_vect(v);
