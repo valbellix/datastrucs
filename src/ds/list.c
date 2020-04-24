@@ -81,6 +81,9 @@ ds_result ds_list_push_front(ds_list* this, void* element) {
 	ds_list_node* n = create_list_node(element, this->element_size);
 
 	n->next = this->root;
+	if (this->root != NULL)
+		this->root->prev = n;
+
 	this->root = n;
 
 	this->size++;
@@ -178,4 +181,22 @@ int ds_list_iterator_is_valid(ds_list_iterator* it) {
 
 const void* ds_list_iterator_get(ds_list_iterator* it) {
 	return it->curr->data;
+}
+
+void ds_list_do(ds_list* this,
+                void (*do_something)(const ds_list_iterator*),
+                ds_list_iterator begin,
+                const size_t number_of_elements,
+                ds_direction direction) {
+	void (*nextElement)(ds_list_iterator*) = ds_list_iterator_next;
+	if (direction == BACKWARD)
+		nextElement = ds_list_iterator_prev;
+
+	size_t counter = 0;
+	while (counter < number_of_elements && ds_list_iterator_is_valid(&begin)) {
+		do_something(&begin);
+
+		nextElement(&begin);
+		counter++;
+	}
 }
