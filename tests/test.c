@@ -17,8 +17,12 @@ int intCmp(const void* e1, const void* e2) {
 		return 1;
 }
 
-void print_element(const ds_vect_iterator* it) {
+void print_vect_element(const ds_vect_iterator* it) {
 	printf("[%d] -> %d\n", it->pos, *((int*)ds_vect_iterator_get(it)));
+}
+
+void print_list_element(const ds_list_iterator* it) {
+	printf("%d\n", *((int*)ds_list_iterator_get(it)));;
 }
 
 int test_vector() {
@@ -64,10 +68,10 @@ int test_vector() {
 	printf("[%d] -> %d\n", 2, *((int*)ds_vect_iterator_get(&it2)));
 
 	printf("test do things forward\n");
-	ds_vect_do(v, print_element, ds_vect_first(v), ds_vect_length(v), FORWARD);
+	ds_vect_do(v, print_vect_element, ds_vect_first(v), ds_vect_length(v), FORWARD);
 
 	printf("test do things backward\n");
-	ds_vect_do(v, print_element, ds_vect_last(v), ds_vect_length(v), BACKWARD);
+	ds_vect_do(v, print_vect_element, ds_vect_last(v), ds_vect_length(v), BACKWARD);
 
 	printf("test remove\n");
 	ds_vect_remove(v, 1);
@@ -95,11 +99,24 @@ int test_list() {
 	for (ds_list_iterator it = ds_list_first(l); ds_list_iterator_is_valid(&it); ds_list_iterator_next(&it))
 		printf("[%d] -> %d\n", counter++, *((int*)ds_list_iterator_get(&it)));
 
+	printf("test do things forward\n");
+	ds_list_do(l, print_list_element, ds_list_first(l), ds_list_length(l), FORWARD);
+
+	printf("test do things backward\n");
+	ds_list_do(l, print_list_element, ds_list_last(l), ds_list_length(l), BACKWARD);
+
 	delete_ds_list(l);
+
+	return 0;
 }
 
 int main() {
+	printf("Test Vector\n");
+	printf("**************\n");
 	test_vector();
+
+	printf("Test List\n");
+	printf("**************\n");
 	test_list();
 
 	return 0;
