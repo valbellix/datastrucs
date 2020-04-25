@@ -119,8 +119,30 @@ ds_result ds_list_push_back(ds_list* this, void* element) {
 	return SUCCESS;
 }
 
+ds_result ds_list_set(ds_list* this, const void* element, const size_t pos) {
+	if (pos >= this->size)
+		return OUT_OF_BOUND;
+
+	size_t counter = 0;
+	ds_list_node* ptr = this->root;
+	while (counter != pos) {
+		ptr = ptr->next;
+		counter++;
+	}
+
+	// it should not happen...
+	if (ptr->data == NULL)
+		ptr->data = malloc(this->element_size);
+
+	if (ptr->data != NULL) {
+		memcpy(ptr->data, element, this->element_size);
+	}
+	return SUCCESS;
+}
+
 ds_list_iterator ds_list_at(const ds_list* this, const size_t pos) {
 	ds_list_iterator iterator;
+	iterator.curr = NULL;
 	iterator.list = this;
 
 	if (pos >= this->size) {

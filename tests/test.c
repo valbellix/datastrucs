@@ -86,13 +86,28 @@ int test_vector() {
 
 int test_list() {
 	ds_list* l = create_ds_list(intCmp, sizeof(int));
+	ds_result res = GENERIC_ERROR;
 
 	printf("test adding elements at list front\n");
 	int one = 123;
 	int two = 456;
+	int three = 789;
 
-	ds_list_push_front(l, &one);
-	ds_list_push_front(l, &two);
+	res = ds_list_push_front(l, &one);
+	if (res != SUCCESS) {
+		printf("push front failed\n");
+		return 1;
+	}
+	res = ds_list_push_front(l, &two);
+	if (res != SUCCESS) {
+		printf("push front failed\n");
+		return 1;
+	}
+	res = ds_list_push_front(l, &three);
+	if (res != SUCCESS) {
+		printf("push front failed\n");
+		return 1;
+	}
 
 	printf("test forward iteration\n");
 	int counter = 0;
@@ -105,19 +120,58 @@ int test_list() {
 	printf("test do things backward\n");
 	ds_list_do(l, print_list_element, ds_list_last(l), ds_list_length(l), BACKWARD);
 
+	printf("test positional access\n");
+	ds_list_iterator positional =  ds_list_at(l, 2);
+	if (!ds_list_iterator_is_valid(&positional)) {
+		printf("The element should be valid\n");
+		return 1;
+	}
+	printf("Element at position 2 is %d\n", *((int*)ds_list_iterator_get(&positional)));
+
+	ds_list_iterator non_valid = ds_list_at(l, 3);
+	if (ds_list_iterator_is_valid(&non_valid)) {
+		printf("The element should not be valid\n");
+		return 1;
+	}
+
+	int newElementInTheMiddle = 555;
+	res = ds_list_set(l, &newElementInTheMiddle, 1);
+	if (res != SUCCESS) {
+		printf("set failed\n");
+		return 1;
+	}
+	positional = ds_list_at(l, 1);
+	if (!ds_list_iterator_is_valid(&positional)) {
+		printf("The element should be valid\n");
+		return 1;
+	}
+	int el = *((int*)ds_list_iterator_get(&positional));
+	printf("Element at position 1 is %d\n", el);
+	if (el != newElementInTheMiddle) {
+		printf("The element set at position 1 is different than expected\n");
+		return 1;
+	}
+
 	delete_ds_list(l);
 
 	return 0;
 }
 
 int main() {
+	int res = 0;
 	printf("Test Vector\n");
 	printf("**************\n");
-	test_vector();
+	res = test_vector();
 
 	printf("Test List\n");
 	printf("**************\n");
-	test_list();
+	res = test_list();
 
-	return 0;
+	printf("**************\n");
+	if (res == 0)
+		printf("Yay! all tests succeeded\n");
+	else
+		printf("No... something has gone wrong\n");
+
+	return res;
 }
