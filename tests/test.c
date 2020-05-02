@@ -165,6 +165,11 @@ int test_list() {
 		return 1;
 	}
 
+	printf("test remove\n");
+	res = ds_list_remove(l, 1);
+	printf("print after element removal at pos 1\n");
+	ds_list_do(l, print_list_element, ds_list_first(l), ds_list_length(l), FORWARD);
+
 	delete_ds_list(l);
 
 	return 0;

@@ -224,16 +224,43 @@ void ds_list_do(ds_list* this,
 }
 
 
-int ds_list_exists(const ds_list* l, const void* element) {
-	if (l->size == 0)
+int ds_list_exists(const ds_list* this, const void* element) {
+	if (this->size == 0)
 		return 0;
 
-	ds_list_node* aux = l->root;
+	ds_list_node* aux = this->root;
 	while (aux != NULL) {
-		if (l->compare(element, aux->data) == 0)
+		if (this->compare(element, aux->data) == 0)
 			return 1;
 		aux = aux->next;
 	}
 
 	return 0;
 }
+
+ds_result ds_list_remove(ds_list* this, const size_t pos) {
+	if (pos >= this->size)
+		return OUT_OF_BOUND;
+
+	size_t curr = 0;
+	ds_list_node* prev = NULL;
+	ds_list_node* aux = this->root;
+
+	while (aux != NULL) {
+		if (pos == curr)
+			break;
+
+		curr++;
+		prev = aux;
+		aux = aux->next;
+	}
+
+	// aux is now the pointer to the node to remove from the list
+	prev->next = aux->next;
+	aux->next->prev = prev;
+	this->size--;
+	destroy_list_node(aux);
+
+	return SUCCESS;
+}
+
