@@ -29,7 +29,7 @@ ds_list_iterator ds_list_at(const ds_list* l, const size_t pos);
 ds_list_iterator ds_list_first(const ds_list* l);
 ds_list_iterator ds_list_last(const ds_list* l);
 
-int ds_list_exists(const ds_list*l, const void* element);
+int ds_list_exists(const ds_list* l, const void* element);
 ds_result ds_list_push_front(ds_list* l, void* element);
 ds_result ds_list_push_back(ds_list* l, void* element);
 ds_result ds_list_remove(ds_list* v, const size_t pos);

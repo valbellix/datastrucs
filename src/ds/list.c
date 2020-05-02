@@ -222,3 +222,18 @@ void ds_list_do(ds_list* this,
 		counter++;
 	}
 }
+
+
+int ds_list_exists(const ds_list* l, const void* element) {
+	if (l->size == 0)
+		return 0;
+
+	ds_list_node* aux = l->root;
+	while (aux != NULL) {
+		if (l->compare(element, aux->data) == 0)
+			return 1;
+		aux = aux->next;
+	}
+
+	return 0;
+}

@@ -109,6 +109,19 @@ int test_list() {
 		return 1;
 	}
 
+	printf("test existence\n");
+	int exists = ds_list_exists(l, &three);
+	if (!exists) {
+		printf("existence test failed\n");
+		return 1;
+	}
+	int bla = 0;
+	exists = ds_list_exists(l, &bla);
+	if (exists) {
+		printf("non-existence test failed\n");
+		return 1;
+	}
+
 	printf("test forward iteration\n");
 	int counter = 0;
 	for (ds_list_iterator it = ds_list_first(l); ds_list_iterator_is_valid(&it); ds_list_iterator_next(&it))
