@@ -25,7 +25,7 @@ $ make
 ```
 
 # Disclaimer
-This code is likely to be very buggy so use it at your own risk.
+This code is likely to be very buggy so use it at your own risk. I am Italian, it means that English is not my primary language, descriptions and docs could be *buggy* as well :-P so please be kind.
 
 # License
 This work is under MIT License, if you wonder *why*, my answer is and it will always be *why not?*
