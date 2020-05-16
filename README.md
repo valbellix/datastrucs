@@ -3,6 +3,18 @@ The objective of this project is my own fun. I used to be a weirdo so I am havin
 
 With all that in mind, I would like a no frills, generic and easy to use library of C to implement basic data structures and collections, so I started to write one on my own... just for fun. I do not know how much of this can be really usable in the real world and I can get tired of it in the long run (or other committments will eat all my spare time), so, please be kind and take this as it is.
 
+## Structures
+Implemented:
+* vector
+* list (double linked list)
+
+TBD:
+* binary tree
+* tree map
+* hash table
+
+There is no commitment by my side to implement everything, and the list may change anytime without notice.
+
 # Build Instructions
 There is a CMakeLists.txt file you can use to generate your preferred way to build this library. I really like to do out-of-source builds and I encourage you to do the same. For example, you can generate makefiles (or VS projects) by:
 ```shell
