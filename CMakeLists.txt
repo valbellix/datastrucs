@@ -20,6 +20,11 @@ target_include_directories(datastructs
 	PUBLIC
 		src)
 
+target_include_directories(test
+	PRIVATE
+		tests
+)
+
 target_link_libraries(test
 	PRIVATE
 		datastructs
