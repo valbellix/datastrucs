@@ -1,3 +1,8 @@
+/*
+ * @file vect.c
+ * @author Valerio Bellizia
+ */
+
 #include "vect.h"
 
 #include <stdlib.h>

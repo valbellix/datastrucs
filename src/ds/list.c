@@ -1,3 +1,8 @@
+/*
+ * @file list.c
+ * @author Valerio Bellizia
+ */
+
 #include "list.h"
 
 #include <stdlib.h>

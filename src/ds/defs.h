@@ -1,3 +1,10 @@
+/**
+ * @file defs.h
+ * @author Valerio Bellizia
+ *
+ * This file contains some common definitions shared by some of the data structures implemented in this library.
+ */
+
 #ifndef defs_h
 #define defs_h
 

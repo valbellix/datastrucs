@@ -1,3 +1,10 @@
+/**
+ * @file result.h
+ * @author Valerio Bellizia
+ *
+ * This file contains a common definition of result.
+ */
+
 #ifndef result_h
 #define result_h
 
