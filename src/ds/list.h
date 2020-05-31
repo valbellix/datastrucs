@@ -70,7 +70,7 @@ const void* ds_list_iterator_get(ds_list_iterator* it);
  * This function will create an instance of ds_list
  *
  * @param cmp_func This is the pointer to a function that will be used to compare two elements
- * @param el_size It is the size of the element that a list node is supposed to store
+ * @param size It is the size of the element that a list node is supposed to store
  * @return It returns the pointer to a new instance of ds_list.
  */
 ds_list* create_ds_list(ds_cmp cmp_func, const size_t size);
