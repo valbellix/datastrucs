@@ -189,3 +189,7 @@ int ds_bin_tree_search(ds_bin_tree* bt, const void* element) {
 
 	return node_search(bt->cmp, bt->root, element);
 }
+
+void delete_ds_bin_tree(ds_bin_tree* bt) {
+	// TBD
+}

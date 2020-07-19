@@ -7,6 +7,7 @@
 
 #include "test_list.h"
 #include "test_vector.h"
+#include "test_bin_tree.h"
 
 #include <stdio.h>
 
@@ -19,6 +20,10 @@ int main() {
 	printf("Test List\n");
 	printf("**************\n");
 	res = test_list();
+
+	printf("Test Binary Tree\n");
+	printf("**************\n");
+	res = test_binary_tree();
 
 	printf("**************\n");
 	if (res == 0)
