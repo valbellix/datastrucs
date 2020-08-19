@@ -9,6 +9,7 @@
 #define test_vector_h
 
 #include "common_stuff.h"
+#include "vb_test.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,11 +17,11 @@
 #include <ds/vect.h>
 
 void print_vect_element(const ds_vect_iterator* it) {
-	printf("[%d] -> %d\n", it->pos, *((int*)ds_vect_iterator_get(it)));
+	vb_infoln("[%d] -> %d", it->pos, *((int*)ds_vect_iterator_get(it)));
 }
 
 int run_test_vector(ds_vect* v) {
-	printf("test adding elements\n");
+	vb_infoln("test adding elements");
 	int one = 123;
 	int two = 456;
 	ds_vect_push_back(v, &one);
@@ -29,46 +30,46 @@ int run_test_vector(ds_vect* v) {
 	ds_vect_iterator it0 = ds_vect_at(v, 0);
 	ds_vect_iterator it1 = ds_vect_at(v, 1);
 
-	printf("one -> %d\n", *((int*)ds_vect_iterator_get(&it0)));
-	printf("two -> %d\n", *((int*)ds_vect_iterator_get(&it1)));
+	vb_infoln("one -> %d", *((int*)ds_vect_iterator_get(&it0)));
+	vb_infoln("two -> %d", *((int*)ds_vect_iterator_get(&it1)));
 
 	int three = 789;
 	ds_vect_push_back(v, &three);
 	ds_vect_iterator it2 = ds_vect_at(v, 2);
 
-	printf("three -> %d\n", *((int*)ds_vect_iterator_get(&it2)));
+	vb_infoln("three -> %d", *((int*)ds_vect_iterator_get(&it2)));
 
-	INFOLN("test element existence")
+	vb_infoln("test element existence");
 	int doesNotExist = 1000;
-	CHECK_IF("check if element exists", ds_vect_exists(v, &one))
-	CHECK_IF_NOT("check if element does not exist", ds_vect_exists(v, &doesNotExist))
+	vb_check_equals_int("check if element exists", ds_vect_exists( v, &one), 1);
+	vb_check_equals_int("check if element does not exist", ds_vect_exists(v, &doesNotExist), 0);
 
-	INFOLN("test forward iteration")
+	vb_infoln("test forward iteration");
 	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it)) {
-		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
+		vb_infoln("[%d] -> %d", it.pos, *((int*)ds_vect_iterator_get(&it)));
 	}
 
-	INFOLN("test backward iteration")
+	vb_infoln("test backward iteration");
 	for (ds_vect_iterator it = ds_vect_last(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_prev(&it))
-		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
+		vb_infoln("[%d] -> %d", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
-	INFOLN("test insert at given position")
+	vb_infoln("test insert at given position");
 	int anotherValue = 555;
 	ds_vect_set(v, &anotherValue, 2);
 	it2 = ds_vect_at(v, 2);
-	printf("[%d] -> %d\n", 2, *((int*)ds_vect_iterator_get(&it2)));
+	vb_infoln("[%d] -> %d", 2, *((int*)ds_vect_iterator_get(&it2)));
 
-	INFOLN("test do things forward")
+	vb_infoln("test do things forward");
 	ds_vect_do(v, print_vect_element, ds_vect_first(v), ds_vect_length(v), FORWARD);
 
-	INFOLN("test do things backward")
+	vb_infoln("test do things backward");
 	ds_vect_do(v, print_vect_element, ds_vect_last(v), ds_vect_length(v), BACKWARD);
 
-	INFOLN("test remove")
+	vb_infoln("test remove");
 	ds_vect_remove(v, 1);
 	ds_vect_remove(v, 1);
 	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
-		printf("[%d] -> %d\n", it.pos, *((int*)ds_vect_iterator_get(&it)));
+		vb_infoln("[%d] -> %d", it.pos, *((int*)ds_vect_iterator_get(&it)));
 
 	return 0;
 }

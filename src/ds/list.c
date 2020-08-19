@@ -207,7 +207,7 @@ int ds_list_iterator_is_valid(ds_list_iterator* it) {
 }
 
 const void* ds_list_iterator_get(ds_list_iterator* it) {
-	return it->curr->data;
+	return (const void*) it->curr->data;
 }
 
 void ds_list_do(ds_list* this,

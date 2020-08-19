@@ -8,6 +8,8 @@
 #ifndef common_stuff_h
 #define common_stuff_h
 
+#include "vb_test.h"
+
 #include <stdio.h>
 
 int int_cmp(const void* e1, const void* e2) {
@@ -22,8 +24,5 @@ int int_cmp(const void* e1, const void* e2) {
 		return 1;
 }
 
-#define INFOLN(MSG) printf(MSG); printf("\n");
-#define CHECK_IF(MSG,COND) INFOLN(MSG); if (!(COND)) { printf("check failed\n"); return 1; }
-#define CHECK_IF_NOT(MSG,COND) INFOLN(MSG); if ((COND)) { printf("check failed\n"); return 1; }
-
 #endif
+
