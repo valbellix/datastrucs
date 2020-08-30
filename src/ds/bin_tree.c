@@ -45,6 +45,18 @@ static ds_bin_tree_node* get_parent(ds_cmp cmp_func, ds_bin_tree_node* root, con
 		return get_parent(cmp_func, root->right, element);
 }
 
+static void free_nodes(ds_bin_tree_node* root) {
+	if (root == NULL)
+		return;
+	else if (ds_bin_tree_node_is_leaf(root))
+		free(root);
+	else {
+		free_nodes(root->left);
+		free_nodes(root->right);
+		free(root);
+	}
+}
+
 ds_bin_tree_node* create_ds_bin_tree_node(void* element, const size_t size) {
 	ds_bin_tree_node* node = (ds_bin_tree_node*) malloc(sizeof(ds_bin_tree_node));
 	if (node != NULL) {
@@ -191,5 +203,11 @@ int ds_bin_tree_search(ds_bin_tree* bt, const void* element) {
 }
 
 void delete_ds_bin_tree(ds_bin_tree* bt) {
-	// TBD
+	if (bt == NULL)
+		return;
+	else {
+		if (bt->root != NULL)
+			free_nodes(bt->root);
+		free(bt);
+	}
 }
