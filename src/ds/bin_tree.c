@@ -19,30 +19,47 @@ struct ds_bin_tree {
 
 struct ds_bin_tree_node {
 	void* info;
+	struct ds_bin_tree_node* parent;
 	struct ds_bin_tree_node* left;
 	struct ds_bin_tree_node* right;
 };
 
 // functions
 
-static int node_search(ds_cmp cmp_func, ds_bin_tree_node* root, const void* element) {
+static void node_visit(ds_bin_tree_node* root, void (*visit_element)(const void*), ds_visit_type type) {
 	if (root == NULL)
-		return 0;
+		return;
+
+	switch (type) {
+	case DFS_PRE_ORDER:
+		visit_element(root->info);
+		node_visit(root->left, visit_element, type);
+		node_visit(root->right, visit_element, type);
+		break;
+	case DFS_IN_ORDER:
+		node_visit(root->left, visit_element, type);
+		visit_element(root->info);
+		node_visit(root->right, visit_element, type);
+		break;
+	case DFS_POST_ORDER:
+		node_visit(root->left, visit_element, type);
+		node_visit(root->right, visit_element, type);
+		visit_element(root->info);
+		break;
+	default:
+		break;
+	}
+}
+
+static ds_bin_tree_node* node_search(ds_cmp cmp_func, ds_bin_tree_node* root, const void* element) {
+	if (root == NULL)
+		return NULL;
 	else if (cmp_func(element, root->info) == 0)
-		return 1;
+		return root;
 	else if (cmp_func(element, root->info) < 0)
 		return node_search(cmp_func, root->left, element);
 	else
 		return node_search(cmp_func, root->right, element);
-}
-
-static ds_bin_tree_node* get_parent(ds_cmp cmp_func, ds_bin_tree_node* root, const void* element) {
-	if (ds_bin_tree_node_is_leaf(root))
-		return root;
-	else if (cmp_func(element, root->info) < 0)
-		return get_parent(cmp_func, root->left, element);
-	else
-		return get_parent(cmp_func, root->right, element);
 }
 
 static void free_nodes(ds_bin_tree_node* root) {
@@ -57,9 +74,40 @@ static void free_nodes(ds_bin_tree_node* root) {
 	}
 }
 
+static ds_bin_tree_node* get_max(ds_bin_tree_node* root) {
+	if (root == NULL)
+		return NULL;
+	else if (ds_bin_tree_node_is_leaf(root))
+		return root;
+	else {
+		ds_bin_tree_node* aux = root;
+		while (aux->right != NULL) {
+			aux = aux->right;
+		}
+
+		return aux;
+	}
+}
+
+static ds_bin_tree_node* get_min(ds_bin_tree_node* root) {
+	if (root == NULL)
+		return NULL;
+	else if (ds_bin_tree_node_is_leaf(root))
+		return root;
+	else {
+		ds_bin_tree_node* aux = root;
+		while (aux->left != NULL) {
+			aux = aux->left;
+		}
+
+		return aux;
+	}
+}
+
 ds_bin_tree_node* create_ds_bin_tree_node(void* element, const size_t size) {
 	ds_bin_tree_node* node = (ds_bin_tree_node*) malloc(sizeof(ds_bin_tree_node));
 	if (node != NULL) {
+		node->parent = NULL;
 		node->left = NULL;
 		node->right = NULL;
 
@@ -126,14 +174,26 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 		bt->root = create_ds_bin_tree_node(element, bt->element_size);
 	}
 	else {
-		ds_bin_tree_node* parent = get_parent(bt->cmp, bt->root, element);
-		// parent should not be null
+		ds_bin_tree_node* aux = bt->root;
+		ds_bin_tree_node* parent = NULL;
+		int turn_left = 0; // I do not like to repeat the test after the ending of the while loop
 
-		// we will insert duplicates to the left... but do we really want duplicate elements?
-		if (bt->cmp(element, parent->info) <= 0)
+		while (aux != NULL) {
+			parent = aux;
+			turn_left = bt->cmp(element, aux->info) <= 0;
+			if (turn_left)
+				aux = aux->left;
+			else
+				aux = aux->right;
+		}
+
+		if (turn_left) {
 			parent->left = create_ds_bin_tree_node(element, bt->element_size);
-		else
-			parent->right = create_ds_bin_tree_node(element, bt->element_size);;
+			parent->left->parent = parent;
+		else {
+			parent->right = create_ds_bin_tree_node(element, bt->element_size);
+			parent->right->parent = parent;
+		}
 	}
 
 	bt->elements++;
@@ -142,72 +202,64 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 }
 
 ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
-	if (element == NULL)
+	// The previous implementation was wrong... TBD
+/*
+	if (bt == NULL)
 		return GENERIC_ERROR;
-
-	if (bt->root == NULL) {
+	if (bt->root == NULL)
 		return SUCCESS;
-	}
-	else {
-		ds_bin_tree_node* parent = get_parent(bt->cmp, bt->root, element);
-		int is_left_child = bt->cmp(element, parent->info) <= 0;
 
-		ds_bin_tree_node* to_remove = is_left_child ? parent->left : parent->right;
-		if (ds_bin_tree_node_is_leaf(to_remove)) {
-			if (is_left_child)
-				parent->left = NULL;
-			else
-				parent->right = NULL;
-		}
-		else if (to_remove->left != NULL && to_remove->right == NULL) {
-			if (is_left_child)
-				parent->left = to_remove->left;
-			else
-				parent->right = to_remove->left;
-		}
-		else if (to_remove->right != NULL && to_remove->left == NULL) {
-			if (is_left_child)
-				parent->left = to_remove->right;
-			else
-				parent->right = to_remove->right;
-		}
-		else {
-			// find the successor of the node element to remove.... i.e. the minimum of the right sub-tree
-			ds_bin_tree_node* r = to_remove->right;
-			while (!ds_bin_tree_node_is_leaf(r->left))
-				r = r->left;
-
-			// now 'r' is the parent of the successor of the element to remove
-			r->left->left = to_remove->left;
-			r->left->right = to_remove->right;
-			if (is_left_child)
-				parent->left = r->left;
-			else
-				parent->right = r->left;
-		}
-
-		to_remove->left = NULL;
-		to_remove->right = NULL;
-		delete_ds_bin_tree_node(to_remove);
-
-		bt->elements--;
+	ds_bin_tree_node* to_remove = node_search(bt->cmp, bt->root, element);
+	if (to_remove == NULL)
 		return SUCCESS;
-	}
+
+	// find the successor (i.e. the minimum of the right sub-tree)
+	ds_bin_tree_node* successor = get_min(to_remove->right);
+*/
+	return GENERIC_ERROR;
 }
 
 int ds_bin_tree_search(ds_bin_tree* bt, const void* element) {
 	if (bt == NULL || element == NULL || bt->root == NULL)
 		return 0;
 
-	return node_search(bt->cmp, bt->root, element);
+	return node_search(bt->cmp, bt->root, element) != NULL;
 }
 
 void delete_ds_bin_tree(ds_bin_tree* bt) {
 	if (bt == NULL)
 		return;
-	else {
-		if (bt->root != NULL)
-			free_nodes(bt->root);
-		free(bt);
-	}
+
+	if (bt->root != NULL)
+		free_nodes(bt->root);
+	free(bt);
+}
+
+const void* ds_bin_tree_max(ds_bin_tree* bt) {
+	if (bt == NULL)
+		return NULL;
+
+	ds_bin_tree_node* max = get_max(bt->root);
+	if (max == NULL)
+		return NULL;
+
+	return max->info;
+}
+
+const void* ds_bin_tree_min(ds_bin_tree* bt) {
+	if (bt == NULL)
+		return NULL;
+
+	ds_bin_tree_node* min = get_min(bt->root);
+	if (min == NULL)
+		return NULL;
+
+	return min->info;
+}
+
+void ds_bin_tree_visit(ds_bin_tree* bt, void (*visit_element)(const void*), ds_visit_type type) {
+	if (bt == NULL)
+		return;
+
+	node_visit(bt->root, visit_element, type);
 }

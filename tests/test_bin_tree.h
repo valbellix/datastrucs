@@ -25,10 +25,21 @@ int test_binary_tree() {
 	ds_result res = GENERIC_ERROR;
 
 	vb_infoln("test adding a root element on the binary tree");
-	int rootElement = 10;
-	res = ds_bin_tree_insert(tree, &rootElement);
-	int exists = ds_bin_tree_search(tree, &rootElement);
-	vb_check_equals_int("existance test", ds_bin_tree_search(tree, &rootElement), 1);
+	int one = 10;
+	res = ds_bin_tree_insert(tree, &one);
+	vb_check_equals_int("insert first element", res, SUCCESS);
+	vb_check_equals_int("element should exist", ds_bin_tree_search(tree, &one), 1);
+	vb_check_equals_int("size should be 1", ds_bin_tree_size(tree), 1);
+
+	int zero = 0;
+	res = ds_bin_tree_insert(tree, &zero);
+	vb_check_equals_int("insert second element", res, SUCCESS);
+	vb_check_equals_int("size should be 2", ds_bin_tree_size(tree), 2);
+
+	int thirteen = 13;
+	res = ds_bin_tree_insert(tree, &thirteen);
+	vb_check_equals_int("insert third element", res, SUCCESS);
+	vb_check_equals_int("size should be 3", ds_bin_tree_size(tree), 3);
 
 	delete_ds_bin_tree(tree);
 	return 0;

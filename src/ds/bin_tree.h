@@ -25,6 +25,11 @@ typedef struct ds_bin_tree ds_bin_tree;
 typedef struct ds_bin_tree_node ds_bin_tree_node;
 
 /**
+ * This represents the supported visiting strategies.
+ */
+typedef enum ds_visit_type { DFS_PRE_ORDER, DFS_IN_ORDER, DFS_POST_ORDER } ds_visit_type;
+
+/**
  * This function will create a binary tree node by copying the element passed as argument.
  * 
  * @param element The element to store in the node.
@@ -126,5 +131,30 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element);
  * @return It returns 1 if the element exists, 0 otherwise.
  */
 int ds_bin_tree_search(ds_bin_tree* bt, const void* element);
+
+/**
+ * This function will return the maximum value into the binary tree.
+ *
+ * @param bt The binary tree.
+ * @return The maximum value stored in the binary tree.
+ */
+const void* ds_bin_tree_max(ds_bin_tree* bt);
+
+/**
+ * This function will return the minimum value into the binary tree.
+ *
+ * @param bt The binary tree.
+ * @return The minimum value stored in the binary tree.
+ */
+const void* ds_bin_tree_min(ds_bin_tree* bt);
+
+/**
+ * This function will implement a custom visit on tree nodes using a specified visiting strategy.
+ *
+ * @param bt The binary tree.
+ * @param visit_func The function that will be used to visit the element within the node.
+ * @param type The type of the tree visit.
+ */
+void ds_bin_tree_visit(ds_bin_tree* bt, void (*visit_func)(const void*), ds_visit_type type);
 
 #endif
