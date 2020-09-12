@@ -54,12 +54,15 @@ static void node_visit(ds_bin_tree_node* root, void (*visit_element)(const void*
 static ds_bin_tree_node* node_search(ds_cmp cmp_func, ds_bin_tree_node* root, const void* element) {
 	if (root == NULL)
 		return NULL;
-	else if (cmp_func(element, root->info) == 0)
-		return root;
-	else if (cmp_func(element, root->info) < 0)
-		return node_search(cmp_func, root->left, element);
-	else
-		return node_search(cmp_func, root->right, element);
+	else {
+		int cmp_res = cmp_func(element, root->info);
+		if (cmp_res == 0)
+			return root;
+		else if (cmp_res < 0)
+			return node_search(cmp_func, root->left, element);
+		else
+			return node_search(cmp_func, root->right, element);
+	}
 }
 
 static void free_nodes(ds_bin_tree_node* root) {
@@ -204,7 +207,6 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 
 ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 	// The previous implementation was wrong... TBD
-/*
 	if (bt == NULL)
 		return GENERIC_ERROR;
 	if (bt->root == NULL)
@@ -214,10 +216,67 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 	if (to_remove == NULL)
 		return SUCCESS;
 
-	// find the successor (i.e. the minimum of the right sub-tree)
-	ds_bin_tree_node* successor = get_min(to_remove->right);
-*/
-	return GENERIC_ERROR;
+	if (ds_bin_tree_node_is_leaf(to_remove)) {
+		if (to_remove->parent != NULL) {
+			if (to_remove->parent->left == to_remove)
+				to_remove->parent->left = NULL;
+			else
+				to_remove->parent->right = NULL;
+		}
+	}
+	else if (to_remove->left != NULL && to_remove->right == NULL) {
+		// we have just one child node and it is the right one
+		ds_bin_tree_node* child = to_remove->left;
+		child->parent = to_remove->parent;
+
+		if (to_remove->parent != NULL) {
+			if (to_remove->parent->left == to_remove)
+				to_remove->parent->left = child;
+			else
+				to_remove->parent->right = child;
+		}
+	}
+	else if (to_remove->left == NULL && to_remove->right != NULL) {
+		// we have just one child node and it is the right one
+		ds_bin_tree_node* child = to_remove->right;
+		child->parent = to_remove->parent;
+
+		if (to_remove->parent != NULL) {
+			if (to_remove->parent->left == to_remove)
+				to_remove->parent->left = child;
+			else
+				to_remove->parent->right = child;
+		}
+	}
+	else {
+		// we have two children, so we need to swap with its successor
+		// (i.e. the minimum of the right sub-tree)
+		ds_bin_tree_node* successor = get_min(to_remove->right);
+
+		// it may have just a right child
+		if (successor->right != NULL) {
+			if (successor->parent != NULL) {
+				successor->parent->left = successor->right;
+			}
+			successor->right->parent = successor->parent;
+		}
+
+		successor->parent = to_remove->parent;
+		successor->left = to_remove->left;
+		// the right subtree of the successor should not need to be touched
+
+		if (to_remove->parent != NULL) {
+			if (to_remove->parent->left == to_remove)
+				to_remove->parent->left = successor;
+			else
+				to_remove->parent->right = successor;
+		}
+	}
+
+	delete_ds_bin_tree_node(to_remove);
+
+	bt->elements--;
+	return SUCCESS;
 }
 
 int ds_bin_tree_search(ds_bin_tree* bt, const void* element) {

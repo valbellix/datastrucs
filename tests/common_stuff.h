@@ -16,6 +16,9 @@ int int_cmp(const void* e1, const void* e2) {
 	const int* i1 = (int*) e1;
 	const int* i2 = (int*) e2;
 
+	if (i1 == NULL || i2 == NULL)
+		return 0;
+
 	if (*i1 < *i2)
 		return -1;
 	else if (*i1 == *i2)
