@@ -190,6 +190,7 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 		if (turn_left) {
 			parent->left = create_ds_bin_tree_node(element, bt->element_size);
 			parent->left->parent = parent;
+		}
 		else {
 			parent->right = create_ds_bin_tree_node(element, bt->element_size);
 			parent->right->parent = parent;

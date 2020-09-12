@@ -81,7 +81,7 @@ int ds_vect_iterator_is_valid(ds_vect_iterator* it) {
 }
 
 const void* ds_vect_iterator_get(ds_vect_iterator* it) {
-	return ((const void*) VECT_AT(it->v, it->pos));
+	return ((const char*) VECT_AT(it->v, it->pos));
 }
 
 ds_vect* create_ds_vect(ds_cmp func, const size_t element_size) {

@@ -58,6 +58,7 @@ static void destroy_list_node(ds_list_node* node) {
 
 ds_list* create_ds_list(ds_cmp cmp_func, const size_t size) {
 	ds_list* list = (ds_list*) malloc(sizeof(ds_list));
+	list->root = NULL;
 	list->size = 0;
 	list->element_size = size;
 	list->compare = cmp_func;
@@ -85,10 +86,10 @@ size_t ds_list_length(const ds_list* this) {
 ds_result ds_list_push_front(ds_list* this, void* element) {
 	ds_list_node* n = create_list_node(element, this->element_size);
 
-	n->next = this->root;
 	if (this->root != NULL)
 		this->root->prev = n;
 
+	n->next = this->root;
 	this->root = n;
 
 	this->size++;
