@@ -7,7 +7,7 @@ With all that in mind, I would like a no frills, generic and easy to use library
 Implemented:
 * vector
 * list (double linked list)
-* binary tree (not balanced... nor completed)
+* binary tree (not balanced... yet)
 
 TBD:
 * tree map
