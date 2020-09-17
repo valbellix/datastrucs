@@ -54,4 +54,5 @@ dkms.conf
 # Other stuff
 build
 .vs
+.vscode
 out
