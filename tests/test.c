@@ -21,7 +21,7 @@ int main() {
 	printf("**************\n");
 	res = test_list();
 
-	printf("Test Binary Tree\n");
+	printf("Test Binary Search Tree\n");
 	printf("**************\n");
 	res = test_binary_tree();
 

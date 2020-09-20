@@ -1,32 +1,32 @@
 /*
- * @file bin_tree.c
+ * @file bst.c
  * @author Valerio Bellizia
  */
 
-#include "bin_tree.h"
+#include "bst.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 // struct definitions
 
-struct ds_bin_tree {
-	ds_bin_tree_node* root;
+struct ds_bst {
+	ds_bst_node* root;
 	ds_cmp cmp;
 	size_t elements;
 	size_t element_size;
 };
 
-struct ds_bin_tree_node {
+struct ds_bst_node {
 	void* info;
-	struct ds_bin_tree_node* parent;
-	struct ds_bin_tree_node* left;
-	struct ds_bin_tree_node* right;
+	struct ds_bst_node* parent;
+	struct ds_bst_node* left;
+	struct ds_bst_node* right;
 };
 
 // functions
 
-static void node_visit(ds_bin_tree_node* root, void (*visit_element)(const void*), ds_visit_type type) {
+static void node_visit(ds_bst_node* root, void (*visit_element)(const void*), ds_visit_type type) {
 	if (root == NULL)
 		return;
 
@@ -51,7 +51,7 @@ static void node_visit(ds_bin_tree_node* root, void (*visit_element)(const void*
 	}
 }
 
-static ds_bin_tree_node* node_search(ds_cmp cmp_func, ds_bin_tree_node* root, const void* element) {
+static ds_bst_node* node_search(ds_cmp cmp_func, ds_bst_node* root, const void* element) {
 	if (root == NULL)
 		return NULL;
 	else {
@@ -65,10 +65,10 @@ static ds_bin_tree_node* node_search(ds_cmp cmp_func, ds_bin_tree_node* root, co
 	}
 }
 
-static void free_nodes(ds_bin_tree_node* root) {
+static void free_nodes(ds_bst_node* root) {
 	if (root == NULL)
 		return;
-	else if (ds_bin_tree_node_is_leaf(root))
+	else if (ds_bst_node_is_leaf(root))
 		free(root);
 	else {
 		free_nodes(root->left);
@@ -77,13 +77,13 @@ static void free_nodes(ds_bin_tree_node* root) {
 	}
 }
 
-static ds_bin_tree_node* get_max(ds_bin_tree_node* root) {
+static ds_bst_node* get_max(ds_bst_node* root) {
 	if (root == NULL)
 		return NULL;
-	else if (ds_bin_tree_node_is_leaf(root))
+	else if (ds_bst_node_is_leaf(root))
 		return root;
 	else {
-		ds_bin_tree_node* aux = root;
+		ds_bst_node* aux = root;
 		while (aux->right != NULL) {
 			aux = aux->right;
 		}
@@ -92,13 +92,13 @@ static ds_bin_tree_node* get_max(ds_bin_tree_node* root) {
 	}
 }
 
-static ds_bin_tree_node* get_min(ds_bin_tree_node* root) {
+static ds_bst_node* get_min(ds_bst_node* root) {
 	if (root == NULL)
 		return NULL;
-	else if (ds_bin_tree_node_is_leaf(root))
+	else if (ds_bst_node_is_leaf(root))
 		return root;
 	else {
-		ds_bin_tree_node* aux = root;
+		ds_bst_node* aux = root;
 		while (aux->left != NULL) {
 			aux = aux->left;
 		}
@@ -107,8 +107,8 @@ static ds_bin_tree_node* get_min(ds_bin_tree_node* root) {
 	}
 }
 
-ds_bin_tree_node* create_ds_bin_tree_node(void* element, const size_t size) {
-	ds_bin_tree_node* node = (ds_bin_tree_node*) malloc(sizeof(ds_bin_tree_node));
+ds_bst_node* create_ds_bst_node(void* element, const size_t size) {
+	ds_bst_node* node = (ds_bst_node*) malloc(sizeof(ds_bst_node));
 	if (node != NULL) {
 		node->parent = NULL;
 		node->left = NULL;
@@ -123,20 +123,20 @@ ds_bin_tree_node* create_ds_bin_tree_node(void* element, const size_t size) {
 	return node;
 }
 
-ds_bin_tree_node* ds_bin_tree_node_left(ds_bin_tree_node* node) {
+ds_bst_node* ds_bst_node_left(ds_bst_node* node) {
 	return node->left;
 }
 
 
-ds_bin_tree_node* ds_bin_tree_node_right(ds_bin_tree_node* node) {
+ds_bst_node* ds_bst_node_right(ds_bst_node* node) {
 	return node->right;
 }
 
-int ds_bin_tree_node_is_leaf(ds_bin_tree_node* node) {
+int ds_bst_node_is_leaf(ds_bst_node* node) {
 	return (node->left == NULL) && (node->right == NULL);
 }
 
-void delete_ds_bin_tree_node(ds_bin_tree_node* node) {
+void delete_ds_bst_node(ds_bst_node* node) {
 	if (node != NULL) {
 		if (node->info != NULL) {
 			free(node->info);
@@ -145,15 +145,15 @@ void delete_ds_bin_tree_node(ds_bin_tree_node* node) {
 	}
 }
 
-const void* ds_bin_tree_node_get(ds_bin_tree_node* node) {
+const void* ds_bst_node_get(ds_bst_node* node) {
 	if (node == NULL)
 		return NULL;
 
 	return node->info;
 }
 
-ds_bin_tree* create_ds_bin_tree(ds_cmp cmp_func, const size_t size) {
-	ds_bin_tree* bt = (ds_bin_tree*) malloc(sizeof(ds_bin_tree));
+ds_bst* create_ds_bst(ds_cmp cmp_func, const size_t size) {
+	ds_bst* bt = (ds_bst*) malloc(sizeof(ds_bst));
 	if (bt == NULL)
 		return bt;
 
@@ -165,20 +165,20 @@ ds_bin_tree* create_ds_bin_tree(ds_cmp cmp_func, const size_t size) {
 	return bt;
 }
 
-size_t ds_bin_tree_size(const ds_bin_tree* bt) {
+size_t ds_bst_size(const ds_bst* bt) {
 	return bt->elements;
 }
 
-ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
+ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 	if (element == NULL)
 		return GENERIC_ERROR;
 
 	if (bt->root == NULL) {
-		bt->root = create_ds_bin_tree_node(element, bt->element_size);
+		bt->root = create_ds_bst_node(element, bt->element_size);
 	}
 	else {
-		ds_bin_tree_node* aux = bt->root;
-		ds_bin_tree_node* parent = NULL;
+		ds_bst_node* aux = bt->root;
+		ds_bst_node* parent = NULL;
 		int turn_left = 0; // I do not like to repeat the test after the ending of the while loop
 
 		while (aux != NULL) {
@@ -191,11 +191,11 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 		}
 
 		if (turn_left) {
-			parent->left = create_ds_bin_tree_node(element, bt->element_size);
+			parent->left = create_ds_bst_node(element, bt->element_size);
 			parent->left->parent = parent;
 		}
 		else {
-			parent->right = create_ds_bin_tree_node(element, bt->element_size);
+			parent->right = create_ds_bst_node(element, bt->element_size);
 			parent->right->parent = parent;
 		}
 	}
@@ -205,18 +205,18 @@ ds_result ds_bin_tree_insert(ds_bin_tree* bt, const void* element) {
 	return SUCCESS;
 }
 
-ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
+ds_result ds_bst_remove(ds_bst* bt, const void* element) {
 	// The previous implementation was wrong... TBD
 	if (bt == NULL)
 		return GENERIC_ERROR;
 	if (bt->root == NULL)
 		return SUCCESS;
 
-	ds_bin_tree_node* to_remove = node_search(bt->cmp, bt->root, element);
+	ds_bst_node* to_remove = node_search(bt->cmp, bt->root, element);
 	if (to_remove == NULL)
 		return SUCCESS;
 
-	if (ds_bin_tree_node_is_leaf(to_remove)) {
+	if (ds_bst_node_is_leaf(to_remove)) {
 		if (to_remove->parent != NULL) {
 			if (to_remove->parent->left == to_remove)
 				to_remove->parent->left = NULL;
@@ -226,7 +226,7 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 	}
 	else if (to_remove->left != NULL && to_remove->right == NULL) {
 		// we have just one child node and it is the right one
-		ds_bin_tree_node* child = to_remove->left;
+		ds_bst_node* child = to_remove->left;
 		child->parent = to_remove->parent;
 
 		if (to_remove->parent != NULL) {
@@ -238,7 +238,7 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 	}
 	else if (to_remove->left == NULL && to_remove->right != NULL) {
 		// we have just one child node and it is the right one
-		ds_bin_tree_node* child = to_remove->right;
+		ds_bst_node* child = to_remove->right;
 		child->parent = to_remove->parent;
 
 		if (to_remove->parent != NULL) {
@@ -251,7 +251,7 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 	else {
 		// we have two children, so we need to swap with its successor
 		// (i.e. the minimum of the right sub-tree)
-		ds_bin_tree_node* successor = get_min(to_remove->right);
+		ds_bst_node* successor = get_min(to_remove->right);
 
 		// it may have just a right child
 		if (successor->right != NULL) {
@@ -273,20 +273,20 @@ ds_result ds_bin_tree_remove(ds_bin_tree* bt, const void* element) {
 		}
 	}
 
-	delete_ds_bin_tree_node(to_remove);
+	delete_ds_bst_node(to_remove);
 
 	bt->elements--;
 	return SUCCESS;
 }
 
-int ds_bin_tree_search(ds_bin_tree* bt, const void* element) {
+int ds_bst_search(ds_bst* bt, const void* element) {
 	if (bt == NULL || element == NULL || bt->root == NULL)
 		return 0;
 
 	return node_search(bt->cmp, bt->root, element) != NULL;
 }
 
-void delete_ds_bin_tree(ds_bin_tree* bt) {
+void delete_ds_bst(ds_bst* bt) {
 	if (bt == NULL)
 		return;
 
@@ -295,29 +295,29 @@ void delete_ds_bin_tree(ds_bin_tree* bt) {
 	free(bt);
 }
 
-const void* ds_bin_tree_max(ds_bin_tree* bt) {
+const void* ds_bst_max(ds_bst* bt) {
 	if (bt == NULL)
 		return NULL;
 
-	ds_bin_tree_node* max = get_max(bt->root);
+	ds_bst_node* max = get_max(bt->root);
 	if (max == NULL)
 		return NULL;
 
 	return max->info;
 }
 
-const void* ds_bin_tree_min(ds_bin_tree* bt) {
+const void* ds_bst_min(ds_bst* bt) {
 	if (bt == NULL)
 		return NULL;
 
-	ds_bin_tree_node* min = get_min(bt->root);
+	ds_bst_node* min = get_min(bt->root);
 	if (min == NULL)
 		return NULL;
 
 	return min->info;
 }
 
-void ds_bin_tree_visit(ds_bin_tree* bt, void (*visit_element)(const void*), ds_visit_type type) {
+void ds_bst_visit(ds_bst* bt, void (*visit_element)(const void*), ds_visit_type type) {
 	if (bt == NULL)
 		return;
 

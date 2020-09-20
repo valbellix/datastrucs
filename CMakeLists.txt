@@ -5,7 +5,7 @@ project(datastructs C)
 add_library(datastructs STATIC
 	src/ds/vect.c
 	src/ds/list.c
-	src/ds/bin_tree.c
+	src/ds/bst.c
 )
 
 target_include_directories(datastructs
