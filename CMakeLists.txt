@@ -26,15 +26,15 @@ target_include_directories(test
 		tests
 )
 
-if(MSVC)
-	target_link_libraries(test
-		PRIVATE
-			datastructs
-	)
+if (MSVC)
+	set("TEST_LIBS" "")
 else()
-	target_link_libraries(test
-		PRIVATE
-			datastructs
-			m
-	)
+	set("TEST_LIBS" "m")
 endif()
+
+target_link_libraries(test
+	PRIVATE
+		datastructs
+		${TEST_LIBS}
+)
+
