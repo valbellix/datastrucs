@@ -8,7 +8,23 @@ add_library(datastructs STATIC
 	src/ds/bst.c
 )
 
+add_library(datastructsShared SHARED
+	src/ds/vect.c
+	src/ds/list.c
+	src/ds/bst.c
+)
+
+set_target_properties(datastructsShared
+	PROPERTIES OUTPUT_NAME
+		datastructs
+)
+
 target_include_directories(datastructs
+	PRIVATE
+		src/ds
+)
+
+target_include_directories(datastructsShared
 	PRIVATE
 		src/ds
 )
