@@ -8,10 +8,11 @@ Implemented:
 * vector
 * list (double linked list)
 * binary search tree (not balanced... yet)
+* treemap (some functions and tests are still missing...)
 
 TBD:
-* tree map
 * hash table
+* graph
 
 There is no commitment by my side to implement everything, and the list may change anytime without notice.
 

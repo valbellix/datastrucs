@@ -6,12 +6,14 @@ add_library(datastructs STATIC
 	src/ds/vect.c
 	src/ds/list.c
 	src/ds/bst.c
+	src/ds/treemap.c
 )
 
 add_library(datastructsShared SHARED
 	src/ds/vect.c
 	src/ds/list.c
 	src/ds/bst.c
+	src/ds/treemap.c
 )
 
 set_target_properties(datastructsShared
