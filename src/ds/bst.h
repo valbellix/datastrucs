@@ -93,9 +93,18 @@ ds_bst* create_ds_bst(ds_cmp cmp_func, const size_t size);
  * This function will release the memory allocated to the binary tree.
  * Elements stored in the list will be freed using 'free'.
  *
- * @param bt the binary tree.
+ * @param bt The binary tree.
  */
 void delete_ds_bst(ds_bst* bt);
+
+/**
+ * This function will return the comparison function used by the binary tree.
+ * 
+ * @param bt The binary tree.
+ * 
+ * @return The comparison function.
+ */
+ds_cmp ds_bst_cmp(ds_bst* bt);
 
 /**
  * This function will return the number of elements store in the binary tree.
@@ -162,9 +171,10 @@ const void* ds_bst_min(ds_bst* bt);
  * This function will implement a custom visit on tree nodes using a specified visiting strategy.
  *
  * @param bt The binary tree.
- * @param visit_func The function that will be used to visit the element within the node.
+ * @param visit_func The function that will be used to visit the element within the node. It is a function like func(const void*, void*)
  * @param type The type of the tree visit.
+ * @param func_aux It is the second argument to pass visit_func.
  */
-void ds_bst_visit(ds_bst* bt, void (*visit_func)(const void*), ds_visit_type type);
+void ds_bst_visit(ds_bst* bt, void (*visit_func)(const void*, void*), ds_visit_type type, void* func_aux);
 
 #endif

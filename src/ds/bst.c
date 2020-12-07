@@ -26,25 +26,25 @@ struct ds_bst_node {
 
 // functions
 
-static void node_visit(ds_bst_node* root, void (*visit_element)(const void*), ds_visit_type type) {
+static void node_visit(ds_bst_node* root, void (*visit_element)(const void*, void*), ds_visit_type type, void* func_aux) {
 	if (root == NULL)
 		return;
 
 	switch (type) {
 	case DFS_PRE_ORDER:
-		visit_element(root->info);
-		node_visit(root->left, visit_element, type);
-		node_visit(root->right, visit_element, type);
+		visit_element(root->info, func_aux);
+		node_visit(root->left, visit_element, type, func_aux);
+		node_visit(root->right, visit_element, type, func_aux);
 		break;
 	case DFS_IN_ORDER:
-		node_visit(root->left, visit_element, type);
-		visit_element(root->info);
-		node_visit(root->right, visit_element, type);
+		node_visit(root->left, visit_element, type, func_aux);
+		visit_element(root->info, func_aux);
+		node_visit(root->right, visit_element, type, func_aux);
 		break;
 	case DFS_POST_ORDER:
-		node_visit(root->left, visit_element, type);
-		node_visit(root->right, visit_element, type);
-		visit_element(root->info);
+		node_visit(root->left, visit_element, type, func_aux);
+		node_visit(root->right, visit_element, type, func_aux);
+		visit_element(root->info, func_aux);
 		break;
 	default:
 		break;
@@ -309,6 +309,10 @@ void delete_ds_bst(ds_bst* bt) {
 	free(bt);
 }
 
+ds_cmp ds_bst_cmp(ds_bst* bt) {
+	return bt->cmp;
+}
+
 const void* ds_bst_max(ds_bst* bt) {
 	if (bt == NULL)
 		return NULL;
@@ -331,9 +335,9 @@ const void* ds_bst_min(ds_bst* bt) {
 	return min->info;
 }
 
-void ds_bst_visit(ds_bst* bt, void (*visit_element)(const void*), ds_visit_type type) {
+void ds_bst_visit(ds_bst* bt, void (*visit_element)(const void*, void*), ds_visit_type type, void* func_aux) {
 	if (bt == NULL)
 		return;
 
-	node_visit(bt->root, visit_element, type);
+	node_visit(bt->root, visit_element, type, func_aux);
 }

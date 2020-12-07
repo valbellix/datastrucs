@@ -30,20 +30,18 @@ struct visit_test {
 	int number;
 };
 
-struct visit_test g_test;
-
-void visit_test(const void* element) {
+void visit_test(const void* element, void* func_aux) {
 	int n = *((int*)element);
-	g_test.accumulator += pow(31, g_test.number) * n;
-	g_test.number++;
+	struct visit_test* test = (struct visit_test*) func_aux;
+	test->accumulator += pow(31, test->number) * n;
+	test->number++;
 }
 
 int test_binary_tree() {
 	ds_bst* tree = create_ds_bst(int_cmp, sizeof(int));
 	ds_result res = GENERIC_ERROR;
 
-	g_test.accumulator = 0;
-	g_test.number = 0;
+	struct visit_test test = {0, 0};
 
 	vb_infoln("test adding a root element on the binary tree");
 	int ten = 10;
@@ -83,20 +81,20 @@ int test_binary_tree() {
 	int post_order_expected = 5 + (pow(31, 1) * 0) + (pow(31, 2) * 12) + (pow(31, 3) * 15) + (pow(31, 4) * 13) + (pow(31, 5) * 10);
 
 	vb_infoln("PRE-ORDER");
-	ds_bst_visit(tree, visit_test, DFS_PRE_ORDER);
-	vb_check_equals_int("check the preorder visit", g_test.accumulator, pre_order_expected);
+	ds_bst_visit(tree, visit_test, DFS_PRE_ORDER, &test);
+	vb_check_equals_int("check the preorder visit", test.accumulator, pre_order_expected);
 
 	vb_infoln("IN-ORDER");
-	g_test.accumulator = 0;
-	g_test.number = 0;
-	ds_bst_visit(tree, visit_test, DFS_IN_ORDER);
-	vb_check_equals_int("check the inorder visit", g_test.accumulator, in_order_expected);
+	test.accumulator = 0;
+	test.number = 0;
+	ds_bst_visit(tree, visit_test, DFS_IN_ORDER, &test);
+	vb_check_equals_int("check the inorder visit", test.accumulator, in_order_expected);
 
 	vb_infoln("POST-ORDER");
-	g_test.accumulator = 0;
-	g_test.number = 0;
-	ds_bst_visit(tree, visit_test, DFS_POST_ORDER);
-	vb_check_equals_int("check the post order visit", g_test.accumulator, post_order_expected);
+	test.accumulator = 0;
+	test.number = 0;
+	ds_bst_visit(tree, visit_test, DFS_POST_ORDER, &test);
+	vb_check_equals_int("check the post order visit", test.accumulator, post_order_expected);
 
 	res = ds_bst_remove(tree, &thirteen);
 	vb_check_equals_int("remove should complete with success", res, SUCCESS);
