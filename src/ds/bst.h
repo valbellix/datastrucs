@@ -133,6 +133,16 @@ ds_result ds_bst_remove(ds_bst* bt, const void* element);
 int ds_bst_search(ds_bst* bt, const void* element);
 
 /**
+ * This function will look for an element into the binary tree, if exists it will
+ * return a pointer to the element, NULL otherwise.
+ * 
+ * @param bt The binary tree.
+ * @param element The element we are looking for.
+ * @return It returns a pointer to the element into the binary tree if such element exists, NULL otherwise.
+ */
+const void* ds_bst_get(ds_bst* bt, const void* element);
+
+/**
  * This function will return the maximum value into the binary tree.
  *
  * @param bt The binary tree.

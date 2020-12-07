@@ -103,6 +103,8 @@ int test_binary_tree() {
 	vb_check_equals_int("element should not exist anymore", ds_bst_search(tree, &thirteen), 0);
 	vb_check_equals_int("size should be 5", ds_bst_size(tree), 5);
 
+	vb_check_equals_int("check if element is extracted properly", *((int*)ds_bst_get(tree, &fifteen)), fifteen);
+
 	delete_ds_bst(tree);
 	return 0;
 }

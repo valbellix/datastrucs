@@ -286,6 +286,16 @@ int ds_bst_search(ds_bst* bt, const void* element) {
 	return node_search(bt->cmp, bt->root, element) != NULL;
 }
 
+const void* ds_bst_get(ds_bst* bt, const void* element) {
+	if (bt == NULL || element == NULL || bt->root == NULL)
+		return NULL;
+
+	ds_bst_node* res = node_search(bt->cmp, bt->root, element);
+	if (res == NULL)
+		return NULL;
+	return res->info;
+}
+
 void delete_ds_bst(ds_bst* bt) {
 	if (bt == NULL)
 		return;
