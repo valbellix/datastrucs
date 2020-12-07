@@ -11,6 +11,7 @@
 typedef enum ds_result {
 	SUCCESS,
 	GENERIC_ERROR,
+	ELEMENT_ALREADY_EXISTS,
 	OUT_OF_BOUND
 } ds_result;
 

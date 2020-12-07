@@ -36,7 +36,7 @@ typedef enum ds_visit_type { DFS_PRE_ORDER, DFS_IN_ORDER, DFS_POST_ORDER } ds_vi
  * @param the size of the element to store in the node.
  * @return It returns the pointer to a new instance of ds_bst_node.
  */
-ds_bst_node* create_ds_bst_node(void* element, const size_t size);
+ds_bst_node* create_ds_bst_node(const void* element, const size_t size);
 
 /**
  * This function will release the memory allocated to the node.
@@ -110,7 +110,7 @@ size_t ds_bst_size(const ds_bst* bt);
  *
  * @param bt The binary tree.
  * @param element The element.
- * @return The result of the operation.
+ * @return The result of the operation. The function will return ELEMENT_ALREADY_EXISTS if attempts to insert a duplicate.
  */
 ds_result ds_bst_insert(ds_bst* bt, const void* element);
 

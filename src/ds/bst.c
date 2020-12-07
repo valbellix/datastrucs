@@ -107,7 +107,7 @@ static ds_bst_node* get_min(ds_bst_node* root) {
 	}
 }
 
-ds_bst_node* create_ds_bst_node(void* element, const size_t size) {
+ds_bst_node* create_ds_bst_node(const void* element, const size_t size) {
 	ds_bst_node* node = (ds_bst_node*) malloc(sizeof(ds_bst_node));
 	if (node != NULL) {
 		node->parent = NULL;
@@ -183,7 +183,11 @@ ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 
 		while (aux != NULL) {
 			parent = aux;
-			turn_left = bt->cmp(element, aux->info) <= 0;
+			int res = bt->cmp(element, aux->info);
+			if (res == 0)
+				return ELEMENT_ALREADY_EXISTS;
+
+			turn_left = res <= 0;
 			if (turn_left)
 				aux = aux->left;
 			else
