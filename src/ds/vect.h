@@ -48,6 +48,7 @@ void ds_vect_iterator_prev(ds_vect_iterator* it);
  * This function can be used to check if the iterator is valid.
  *
  * @param it The iterator.
+ * 
  * @return It returns 1 if the iterator is valid, 0 otherwise.
  */
 int ds_vect_iterator_is_valid(ds_vect_iterator* it);
@@ -56,6 +57,7 @@ int ds_vect_iterator_is_valid(ds_vect_iterator* it);
  * This function will get the element pointed by the iterator.
  *
  * @param it The iterator.
+ * 
  * @return The pointer to the element stored into the vector.
  */
 const void* ds_vect_iterator_get(ds_vect_iterator* it);
@@ -65,8 +67,9 @@ const void* ds_vect_iterator_get(ds_vect_iterator* it);
 /**
  * This function will create an instance of ds_vect
  *
- * @param cmp_func This is the pointer to a function that will be used to compare two elements
- * @param el_size It is the size of the element that the vector is supposed to store
+ * @param cmp_func This is the pointer to a function that will be used to compare two elements.
+ * @param el_size It is the size of the element that the vector is supposed to store.
+ * 
  * @return It returns the pointer to a new instance of ds_vect.
  */
 ds_vect* create_ds_vect(ds_cmp cmp_func, const size_t el_size);
@@ -83,6 +86,7 @@ void delete_ds_vect(ds_vect* v);
  * This function will return the length of the vector, in other words, the number of elements.
  *
  * @param v The vector.
+ * 
  * @return the number of elements stored in the vector.
  */
 size_t ds_vect_length(const ds_vect* v);
@@ -92,6 +96,7 @@ size_t ds_vect_length(const ds_vect* v);
  *
  * @param v The vector.
  * @param pos The position of the element to get. If the position is not valid, the iterator is not valid.
+ * 
  * @return An iterator to the element at the given position if valid. Otherwise it will return a non-valid iterator.
  */
 ds_vect_iterator ds_vect_at(const ds_vect* v, const size_t pos);
@@ -100,6 +105,7 @@ ds_vect_iterator ds_vect_at(const ds_vect* v, const size_t pos);
  * This function returns an iterator to the first element.
  *
  * @param v The vector.
+ * 
  * @return An iterator to the first element of the vector.
  */
 ds_vect_iterator ds_vect_first(const ds_vect* v);
@@ -108,6 +114,7 @@ ds_vect_iterator ds_vect_first(const ds_vect* v);
  * This function returns an iterator to the last element.
  *
  * @param v The vector.
+ * 
  * @return An iterator to the last element of the vector.
  */
 ds_vect_iterator ds_vect_last(const ds_vect* v);
@@ -118,6 +125,7 @@ ds_vect_iterator ds_vect_last(const ds_vect* v);
  *
  * @param v The vector.
  * @param element The element we are going to look for in the vector. The element should have be of the same type as the others.
+ * 
  * @return It returns 1 if such element exists, 0 otherwise.
  */
 int ds_vect_exists(const ds_vect* v, const void* element);
@@ -127,6 +135,7 @@ int ds_vect_exists(const ds_vect* v, const void* element);
  *
  * @param v The vector.
  * @param element Is the element to add.
+ * 
  * @return It returns SUCCESS if the element is succesfully added.
  */
 ds_result ds_vect_push_back(ds_vect* v, const void* element);
@@ -136,7 +145,8 @@ ds_result ds_vect_push_back(ds_vect* v, const void* element);
  * All the elements that follow, will be shifted by one position if the position is valid.
  *
  * @param v The vector.
- * @pos The position of the element we want to remove.
+ * @param The position of the element we want to remove.
+ * 
  * @return SUCCESS if it succeeds, it may return OUT_OF_BOUND if position is not valid.
  */
 ds_result ds_vect_remove(ds_vect* v, const size_t pos);
@@ -147,6 +157,7 @@ ds_result ds_vect_remove(ds_vect* v, const size_t pos);
  * @param v The vector.
  * @param element The element to set.
  * @param pos The position to fill with the content of the given element.
+ * 
  * @return SUCCESS if it succeeds, it may return OUT_OF_BOUND if position is not valid.
  */
 ds_result ds_vect_set(ds_vect* v, const void* element, const size_t pos);

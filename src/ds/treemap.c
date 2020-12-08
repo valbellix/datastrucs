@@ -74,7 +74,7 @@ static void visit_bst(const void* el, void* aux) {
 ds_vect* ds_treemap_keys(ds_treemap* map) {
 	ds_vect* vect = create_ds_vect(ds_bst_cmp(map->bst), map->key_len);
 
-	ds_bst_visit(map->bst, visit_bst, DFS_IN_ORDER, vect);
+	ds_bst_visit(map->bst, visit_bst, vect, DFS_IN_ORDER);
 
 	return vect;
 }

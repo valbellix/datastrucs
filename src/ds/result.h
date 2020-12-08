@@ -8,6 +8,9 @@
 #ifndef result_h
 #define result_h
 
+/**
+ * This enumeration plays the part holding return codes.
+ */
 typedef enum ds_result {
 	SUCCESS,
 	GENERIC_ERROR,

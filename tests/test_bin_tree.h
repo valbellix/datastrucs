@@ -30,6 +30,11 @@ struct visit_test {
 	int number;
 };
 
+static void reset_test(struct visit_test* test) {
+	test->accumulator = 0;
+	test->number = 0;
+}
+
 void visit_test(const void* element, void* func_aux) {
 	int n = *((int*)element);
 	struct visit_test* test = (struct visit_test*) func_aux;
@@ -81,19 +86,17 @@ int test_binary_tree() {
 	int post_order_expected = 5 + (pow(31, 1) * 0) + (pow(31, 2) * 12) + (pow(31, 3) * 15) + (pow(31, 4) * 13) + (pow(31, 5) * 10);
 
 	vb_infoln("PRE-ORDER");
-	ds_bst_visit(tree, visit_test, DFS_PRE_ORDER, &test);
+	ds_bst_visit(tree, visit_test, &test, DFS_PRE_ORDER);
 	vb_check_equals_int("check the preorder visit", test.accumulator, pre_order_expected);
 
 	vb_infoln("IN-ORDER");
-	test.accumulator = 0;
-	test.number = 0;
-	ds_bst_visit(tree, visit_test, DFS_IN_ORDER, &test);
+	reset_test(&test);
+	ds_bst_visit(tree, visit_test, &test, DFS_IN_ORDER);
 	vb_check_equals_int("check the inorder visit", test.accumulator, in_order_expected);
 
 	vb_infoln("POST-ORDER");
-	test.accumulator = 0;
-	test.number = 0;
-	ds_bst_visit(tree, visit_test, DFS_POST_ORDER, &test);
+	reset_test(&test);
+	ds_bst_visit(tree, visit_test, &test, DFS_POST_ORDER);
 	vb_check_equals_int("check the post order visit", test.accumulator, post_order_expected);
 
 	res = ds_bst_remove(tree, &thirteen);

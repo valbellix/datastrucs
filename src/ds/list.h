@@ -52,6 +52,7 @@ void ds_list_iterator_prev(ds_list_iterator* it);
  * This function can be used to check if the iterator is valid.
  *
  * @param it The iterator.
+ * 
  * @return it returns 1 if the iterator is valid, 0 otherwise.
  */
 int ds_list_iterator_is_valid(ds_list_iterator* it);
@@ -60,6 +61,7 @@ int ds_list_iterator_is_valid(ds_list_iterator* it);
  * This function will get the element pointed by the iterator.
  *
  * @param it The iterator.
+ * 
  * @return The pointer to the element stored into the list.
  */
 const void* ds_list_iterator_get(ds_list_iterator* it);
@@ -71,6 +73,7 @@ const void* ds_list_iterator_get(ds_list_iterator* it);
  *
  * @param cmp_func This is the pointer to a function that will be used to compare two elements
  * @param size It is the size of the element that a list node is supposed to store
+ * 
  * @return It returns the pointer to a new instance of ds_list.
  */
 ds_list* create_ds_list(ds_cmp cmp_func, const size_t size);
@@ -87,6 +90,7 @@ void delete_ds_list(ds_list* l);
  * This function will return the length of the list, in other words, the number of elements.
  *
  * @param l The list.
+ * 
  * @return the number of elements stored in the list.
  */
 size_t ds_list_length(const ds_list* l);
@@ -96,6 +100,7 @@ size_t ds_list_length(const ds_list* l);
  *
  * @param l The list.
  * @param pos The position of the element to get. If the position is not valid, the iterator is not valid.
+ * 
  * @return An iterator to the element at the given position if valid. Otherwise it will return a non-valid iterator.
  */
 ds_list_iterator ds_list_at(const ds_list* l, const size_t pos);
@@ -104,6 +109,7 @@ ds_list_iterator ds_list_at(const ds_list* l, const size_t pos);
  * This function returns an iterator to the first element.
  *
  * @param l The list.
+ * 
  * @return An iterator to the first element of the list.
  */
 ds_list_iterator ds_list_first(const ds_list* l);
@@ -112,6 +118,7 @@ ds_list_iterator ds_list_first(const ds_list* l);
  * This function returns an iterator to the last element.
  *
  * @param l The list.
+ * 
  * @return An iterator to the last element of the list.
  */
 ds_list_iterator ds_list_last(const ds_list* l);
@@ -122,6 +129,7 @@ ds_list_iterator ds_list_last(const ds_list* l);
  *
  * @param l The list.
  * @param element The element we are going to look for in the list. The element should have be of the same type as the others.
+ * 
  * @return It returns 1 if such element exists, 0 otherwise.
  */
 int ds_list_exists(const ds_list* l, const void* element);
@@ -131,6 +139,7 @@ int ds_list_exists(const ds_list* l, const void* element);
  *
  * @param l The list.
  * @param element Is the element to add.
+ * 
  * @return It returns SUCCESS if the element is succesfully added.
  */
 ds_result ds_list_push_front(ds_list* l, void* element);
@@ -140,6 +149,7 @@ ds_result ds_list_push_front(ds_list* l, void* element);
  *
  * @param l The list.
  * @param element Is the element to add.
+ * 
  * @return It returns SUCCESS if the element is succesfully added.
  */
 ds_result ds_list_push_back(ds_list* l, void* element);
@@ -149,7 +159,7 @@ ds_result ds_list_push_back(ds_list* l, void* element);
  * All the elements that follow, will be shifted by one position if the position is valid.
  *
  * @param l The list. 
- * @pos The position of the element we want to remove.
+ * @param pos The position of the element we want to remove.
  * @return SUCCESS if it succeeds, it may return OUT_OF_BOUND if position is not valid.
  */
 ds_result ds_list_remove(ds_list* l, const size_t pos);

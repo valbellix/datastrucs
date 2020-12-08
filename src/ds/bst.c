@@ -26,25 +26,25 @@ struct ds_bst_node {
 
 // functions
 
-static void node_visit(ds_bst_node* root, void (*visit_element)(const void*, void*), ds_visit_type type, void* func_aux) {
+static void node_visit(ds_bst_node* root, void (*visit_element)(const void*, void*), void* other_args, ds_visit_type type) {
 	if (root == NULL)
 		return;
 
 	switch (type) {
 	case DFS_PRE_ORDER:
-		visit_element(root->info, func_aux);
-		node_visit(root->left, visit_element, type, func_aux);
-		node_visit(root->right, visit_element, type, func_aux);
+		visit_element(root->info, other_args);
+		node_visit(root->left, visit_element, other_args, type);
+		node_visit(root->right, visit_element, other_args, type);
 		break;
 	case DFS_IN_ORDER:
-		node_visit(root->left, visit_element, type, func_aux);
-		visit_element(root->info, func_aux);
-		node_visit(root->right, visit_element, type, func_aux);
+		node_visit(root->left, visit_element, other_args, type);
+		visit_element(root->info, other_args);
+		node_visit(root->right, visit_element, other_args, type);
 		break;
 	case DFS_POST_ORDER:
-		node_visit(root->left, visit_element, type, func_aux);
-		node_visit(root->right, visit_element, type, func_aux);
-		visit_element(root->info, func_aux);
+		node_visit(root->left, visit_element, other_args, type);
+		node_visit(root->right, visit_element, other_args, type);
+		visit_element(root->info, other_args);
 		break;
 	default:
 		break;
@@ -335,9 +335,9 @@ const void* ds_bst_min(ds_bst* bt) {
 	return min->info;
 }
 
-void ds_bst_visit(ds_bst* bt, void (*visit_element)(const void*, void*), ds_visit_type type, void* func_aux) {
+void ds_bst_visit(ds_bst* bt, void (*visit_element)(const void*, void*), void* other_args, ds_visit_type type) {
 	if (bt == NULL)
 		return;
 
-	node_visit(bt->root, visit_element, type, func_aux);
+	node_visit(bt->root, visit_element, other_args, type);
 }
