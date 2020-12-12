@@ -99,6 +99,28 @@ int test_binary_tree() {
 	ds_bst_visit(tree, visit_test, &test, DFS_POST_ORDER);
 	vb_check_equals_int("check the post order visit", test.accumulator, post_order_expected);
 
+	ds_bst_iterator it = ds_bst_first(tree);
+	int n = 0;
+	int p = 0;
+	while (ds_bst_iterator_is_valid(&it)) {
+		int current_value = *((int*)ds_bst_iterator_get(&it));
+		n += pow(31, p) * current_value;
+		p++;
+		ds_bst_iterator_next(&it);
+	}
+	vb_check_equals_int("check if iterator works going forward", n, in_order_expected);
+
+	ds_bst_iterator bit = ds_bst_last(tree);
+	n = 0;
+	p--;
+	while (ds_bst_iterator_is_valid(&bit)) {
+		int current_value = *((int*)ds_bst_iterator_get(&bit));
+		n += pow(31, p) * current_value;
+		p--;
+		ds_bst_iterator_prev(&bit);
+	}
+	vb_check_equals_int("check if iterator works going backward", n, in_order_expected);
+
 	res = ds_bst_remove(tree, &thirteen);
 	vb_check_equals_int("remove should complete with success", res, SUCCESS);
 	vb_check_equals_int("element should not exist anymore", ds_bst_search(tree, &thirteen), 0);

@@ -79,6 +79,30 @@ ds_vect* ds_treemap_keys(ds_treemap* map) {
 	return vect;
 }
 
+ds_treemap_iterator ds_treemap_first(ds_treemap* map) {
+	return ds_bst_first(map->bst);
+}
+
+ds_treemap_iterator ds_treemap_last(ds_treemap* map) {
+	return ds_bst_last(map->bst);
+}
+
+void ds_treemap_iterator_next(ds_treemap_iterator* it) {
+	ds_bst_iterator_next(it);
+}
+
+void ds_treemap_iterator_prev(ds_treemap_iterator* it) {
+	ds_bst_iterator_prev(it);
+}
+
+int ds_treemap_iterator_is_valid(ds_treemap_iterator* it) {
+	return ds_bst_iterator_is_valid(it);
+}
+
+const ds_treemap_entry* ds_treemap_iterator_get(ds_treemap_iterator* it) {
+	return (const ds_treemap_entry*)ds_bst_iterator_get(it);
+}
+
 size_t ds_treemap_size(ds_treemap* map) {
 	return ds_bst_size(map->bst);
 }

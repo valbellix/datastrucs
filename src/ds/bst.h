@@ -25,9 +25,49 @@ typedef struct ds_bst ds_bst;
 typedef struct ds_bst_node ds_bst_node;
 
 /**
+ * This is a structure that represents an iterator for a binary tree
+ */
+typedef struct ds_bst_iterator {
+	const ds_bst* bst;
+	ds_bst_node* current;
+} ds_bst_iterator;
+
+/**
  * This represents the supported visiting strategies.
  */
 typedef enum ds_visit_type { DFS_PRE_ORDER, DFS_IN_ORDER, DFS_POST_ORDER } ds_visit_type;
+
+/**
+ * This function will move the iterator forward.
+ * 
+ * @param it The iterator.
+ */
+void ds_bst_iterator_next(ds_bst_iterator* it);
+
+/**
+ * This function will move the iterator backward.
+ * 
+ * @param it The iterator.
+ */
+void ds_bst_iterator_prev(ds_bst_iterator* it);
+
+/**
+ * This function can be used to check if the iterator is valid.
+ *
+ * @param it The iterator.
+ * 
+ * @return it returns 1 if the iterator is valid, 0 otherwise.
+ */
+int ds_bst_iterator_is_valid(ds_bst_iterator* it);
+
+/**
+ * This function will get the element pointed by the iterator.
+ *
+ * @param it The iterator.
+ * 
+ * @return The pointer to the element stored into the current element held iterator.
+ */
+const void* ds_bst_iterator_get(ds_bst_iterator* it);
 
 /**
  * This function will create a binary tree node by copying the element passed as argument.
@@ -178,6 +218,24 @@ const void* ds_bst_max(ds_bst* bt);
  * @return The minimum value stored in the binary tree.
  */
 const void* ds_bst_min(ds_bst* bt);
+
+/**
+ * This function will return an iterator to the first (smallest) element of the binary tree.
+ * 
+ * @param bt The binary tree.
+ * 
+ * @return The iterator to the smallest element of the binary tree.
+ */
+ds_bst_iterator ds_bst_first(ds_bst* bt);
+
+/**
+ * This function will return an iterator to the last (biggest) element of the binary tree.
+ * 
+ * @param bt The binary tree.
+ * 
+ * @return The iterator to the biggest element of the binary tree.
+ */
+ds_bst_iterator ds_bst_last(ds_bst* bt);
 
 /**
  * This function will implement a custom visit on tree nodes using a specified visiting strategy.

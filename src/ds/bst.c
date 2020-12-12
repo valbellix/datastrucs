@@ -24,8 +24,6 @@ struct ds_bst_node {
 	struct ds_bst_node* right;
 };
 
-// functions
-
 static void node_visit(ds_bst_node* root, void (*visit_element)(const void*, void*), void* other_args, ds_visit_type type) {
 	if (root == NULL)
 		return;
@@ -105,6 +103,72 @@ static ds_bst_node* get_min(ds_bst_node* root) {
 
 		return aux;
 	}
+}
+
+static ds_bst_node* in_order_successor(ds_bst_node* node) {
+	if (node->right != NULL)
+		return get_min(node->right);
+	
+	ds_bst_node* parent = node->parent;
+	ds_bst_node* n = node;
+	while (parent != NULL && n == parent->right) {
+		n = parent;
+		parent = parent->parent;
+	}
+
+	return parent;
+}
+
+static ds_bst_node* in_order_predecessor(ds_bst_node* node) {
+	if (node->left != NULL)
+		return get_max(node->left);
+	
+	ds_bst_node* parent = node->parent;
+	ds_bst_node* n = node;
+	while (parent != NULL && n == parent->left) {
+		n = parent;
+		parent = parent->parent;
+	}
+
+	return parent;
+}
+
+ds_bst_iterator ds_bst_first(ds_bst* bt) {
+	ds_bst_iterator it;
+	it.bst = bt;
+	it.current = get_min(bt->root);
+
+	return it;
+}
+
+ds_bst_iterator ds_bst_last(ds_bst* bt) {
+	ds_bst_iterator it;
+	it.bst = bt;
+	it.current = get_max(bt->root);
+
+	return it;
+}
+
+void ds_bst_iterator_next(ds_bst_iterator* it) {
+	ds_bst_node* successor = in_order_successor(it->current);
+
+	// if the successor is the current itself we are at the end...
+	it->current = (successor == it->current) ? NULL : successor;
+}
+
+void ds_bst_iterator_prev(ds_bst_iterator* it) {
+	ds_bst_node* pred = in_order_predecessor(it->current);
+
+	// if the prececessor is the current itself we are at the end...
+	it->current = (pred == it->current) ? NULL : pred;
+}
+
+int ds_bst_iterator_is_valid(ds_bst_iterator* it) {
+	return it->current != NULL;
+}
+
+const void* ds_bst_iterator_get(ds_bst_iterator* it) {
+	return it->current->info;
 }
 
 ds_bst_node* create_ds_bst_node(const void* element, const size_t size) {
@@ -210,7 +274,6 @@ ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 }
 
 ds_result ds_bst_remove(ds_bst* bt, const void* element) {
-	// The previous implementation was wrong... TBD
 	if (bt == NULL)
 		return GENERIC_ERROR;
 	if (bt->root == NULL)

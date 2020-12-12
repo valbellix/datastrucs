@@ -30,6 +30,43 @@ typedef struct ds_treemap_entry {
 } ds_treemap_entry;
 
 /**
+ * This is a typedef of ds_bst_iterator as ds_bst is the struct that acts as base for this treemap implementation
+ */
+typedef struct ds_bst_iterator ds_treemap_iterator;
+
+/**
+ * This function will move the iterator forward.
+ * 
+ * @param it The iterator.
+ */
+void ds_treemap_iterator_next(ds_treemap_iterator* it);
+
+/**
+ * This function will move the iterator backward.
+ * 
+ * @param it The iterator.
+ */
+void ds_treemap_iterator_prev(ds_treemap_iterator* it);
+
+/**
+ * This function can be used to check if the iterator is valid.
+ *
+ * @param it The iterator.
+ * 
+ * @return it returns 1 if the iterator is valid, 0 otherwise.
+ */
+int ds_treemap_iterator_is_valid(ds_treemap_iterator* it);
+
+/**
+ * This function will get the element pointed by the iterator.
+ *
+ * @param it The iterator.
+ * 
+ * @return The pointer to the element stored into the current element held iterator.
+ */
+const ds_treemap_entry* ds_treemap_iterator_get(ds_treemap_iterator* it);
+
+/**
  * This function will create a treemap instance.
  * 
  * @param key_cmp This is the key comparison function.
@@ -67,6 +104,24 @@ ds_result ds_treemap_insert(ds_treemap* map, void* k, void* v);
  * @return It returns 1 if the element is found, 0 otherwise.
  */
 int ds_treemap_search(ds_treemap* map, void* k);
+
+/**
+ * This function will return an iterator to the first element of the map.
+ * 
+ * @param map The treemap.
+ * 
+ * @return It returns an iterator to the first element of the map.
+ */
+ds_treemap_iterator ds_treemap_first(ds_treemap* map);
+
+/**
+ * This function will return an iterator to the last element of the map.
+ * 
+ * @param map The treemap.
+ * 
+ * @return It returns an iterator to the last element of the map.
+ */
+ds_treemap_iterator ds_treemap_last(ds_treemap* map);
 
 /**
  * This function will get an element on the map based on its key.
