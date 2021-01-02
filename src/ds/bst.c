@@ -19,10 +19,24 @@ struct ds_bst {
 
 struct ds_bst_node {
 	void* info;
+	int height;
+	ds_cmp cmp;
 	struct ds_bst_node* parent;
 	struct ds_bst_node* left;
 	struct ds_bst_node* right;
 };
+
+static int max(int i1, int i2) {
+	return (i1 > i2) ? i1 : i2;
+}
+
+static int node_height(ds_bst_node* node) {
+	return node != NULL ? node->height : 0;
+}
+
+static int node_balance(ds_bst_node* node) {
+	return node != NULL ? node_height(node->left) - node_height(node->right) : 0;
+}
 
 static void node_visit(ds_bst_node* root, void (*visit_element)(const void*, void*), void* other_args, ds_visit_type type) {
 	if (root == NULL)
@@ -133,6 +147,42 @@ static ds_bst_node* in_order_predecessor(ds_bst_node* node) {
 	return parent;
 }
 
+static ds_bst_node* rotate_right(ds_bst_node* node) {
+	ds_bst_node* l = node->left;
+	ds_bst_node* l_right = l->right;
+
+	l->right = node;
+	node->left = l_right;
+
+	if (l_right != NULL)
+		l_right->parent = node;
+	l->parent = node->parent;
+	node->parent = l;
+
+	l->height = 1 + max(node_height(l->left), node_height(l->right));
+	node->height = 1 + max(node_height(node->left), node_height(node->right));
+
+	return l;
+}
+
+static ds_bst_node* rotate_left(ds_bst_node* node) {
+	ds_bst_node* r = node->right;
+	ds_bst_node* r_left = r->left;
+
+	r->left = node;
+	node->right = r_left;
+
+	if (r_left != NULL)
+		r_left->parent = node;
+	r->parent = node->parent;
+	node->parent = r;
+
+	node->height = 1 + max(node_height(node->left), node_height(node->right));
+	r->height = 1 + max(node_height(r->left), node_height(r->right));
+
+	return r;
+}
+
 ds_bst_iterator ds_bst_first(ds_bst* bt) {
 	ds_bst_iterator it;
 	it.bst = bt;
@@ -171,17 +221,19 @@ const void* ds_bst_iterator_get(ds_bst_iterator* it) {
 	return it->current->info;
 }
 
-ds_bst_node* create_ds_bst_node(const void* element, const size_t size) {
+ds_bst_node* create_ds_bst_node(const void* element, ds_cmp cmp, const size_t size) {
 	ds_bst_node* node = (ds_bst_node*) malloc(sizeof(ds_bst_node));
 	if (node != NULL) {
 		node->parent = NULL;
 		node->left = NULL;
 		node->right = NULL;
+		node->cmp = cmp;
 
 		node->info = malloc(size);
 		if (node->info != NULL) {
 			memcpy(node->info, element, size);
 		}
+		node->height = 1;
 	}
 
 	return node;
@@ -233,44 +285,65 @@ size_t ds_bst_size(const ds_bst* bt) {
 	return bt->elements;
 }
 
+static ds_bst_node* insert_node(ds_bst* bt, ds_bst_node* parent, ds_bst_node* r, const void* element) {
+	if (r == NULL) {
+		ds_bst_node* n = create_ds_bst_node(element, bt->cmp, bt->element_size);
+		n->parent = parent;
+		return n;
+	}
+
+	int cmp = bt->cmp(element, r->info);
+	if (cmp < 0) {
+		ds_bst_node* n = insert_node(bt, r, r->left, element);
+		if (n == NULL)
+			return NULL;
+		r->left = n;
+	}
+	else if (cmp > 0) {
+		ds_bst_node* n = insert_node(bt, r, r->right, element);
+		if (n == NULL)
+			return NULL;
+		r->right = n;
+	}
+	else
+		return NULL;
+	
+	// need to update balance factor and balance the tree
+	r->height = 1 + max(node_height(r->left), node_height(r->right));
+	int balance = node_balance(r);
+
+	if (balance > 1 && bt->cmp(element, r->left->info) < 0)
+		return rotate_right(r);
+
+	if (balance < -1 && bt->cmp(element, r->right->info) > 0)
+		return rotate_left(r);
+
+	// following case we have doble rotation...
+	if (balance > 1 && bt->cmp(element, r->left->info) > 0) {
+		r->left = rotate_left(r->left);
+		return rotate_right(r);
+	}
+
+	if (balance < -1 && bt->cmp(element, r->right->info) < 0) {
+		r->right = rotate_right(r->right);
+		return rotate_left(r);
+	}
+
+	return r;
+}
+
 ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 	if (element == NULL)
 		return GENERIC_ERROR;
 
-	if (bt->root == NULL) {
-		bt->root = create_ds_bst_node(element, bt->element_size);
+	ds_bst_node* node = insert_node(bt, NULL, bt->root, element);
+	if (node != NULL) {
+		bt->root = node;
+		bt->elements++;
+		return SUCCESS;
 	}
-	else {
-		ds_bst_node* aux = bt->root;
-		ds_bst_node* parent = NULL;
-		int turn_left = 0; // I do not like to repeat the test after the ending of the while loop
-
-		while (aux != NULL) {
-			parent = aux;
-			int res = bt->cmp(element, aux->info);
-			if (res == 0)
-				return ELEMENT_ALREADY_EXISTS;
-
-			turn_left = res <= 0;
-			if (turn_left)
-				aux = aux->left;
-			else
-				aux = aux->right;
-		}
-
-		if (turn_left) {
-			parent->left = create_ds_bst_node(element, bt->element_size);
-			parent->left->parent = parent;
-		}
-		else {
-			parent->right = create_ds_bst_node(element, bt->element_size);
-			parent->right->parent = parent;
-		}
-	}
-
-	bt->elements++;
-
-	return SUCCESS;
+	
+	return ELEMENT_ALREADY_EXISTS;
 }
 
 ds_result ds_bst_remove(ds_bst* bt, const void* element) {

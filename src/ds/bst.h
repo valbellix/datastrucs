@@ -77,7 +77,7 @@ const void* ds_bst_iterator_get(ds_bst_iterator* it);
  * 
  * @return It returns the pointer to a new instance of ds_bst_node.
  */
-ds_bst_node* create_ds_bst_node(const void* element, const size_t size);
+ds_bst_node* create_ds_bst_node(const void* element, ds_cmp cmp, const size_t size);
 
 /**
  * This function will release the memory allocated to the node.

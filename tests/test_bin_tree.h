@@ -17,8 +17,13 @@
 
 #include <ds/bst.h>
 
-void print_bin_tree_node(ds_bst_node* element) {
-	vb_infoln("%d", *((int*)ds_bst_node_get(element)));
+void print_element(const void* element, void* func_aux) {
+	printf("%d ", *((int*)element));
+}
+
+void print_tree(ds_bst* bt, ds_visit_type visit_type) {
+	ds_bst_visit(bt, print_element, NULL, visit_type);
+	printf("\n");
 }
 
 void print_int(const void* element) {
@@ -81,21 +86,24 @@ int test_binary_tree() {
 	vb_check_equals_int("insert sixth element", res, SUCCESS);
 	vb_check_equals_int("size should be 6", ds_bst_size(tree), 6);
 
-	int pre_order_expected = 10 + (pow(31, 1) * 0) + (pow(31, 2) * 5) + (pow(31, 3) * 13) + (pow(31, 4) * 12) + (pow(31, 5) * 15);
+	int pre_order_expected = 12 + (pow(31, 1) * 5) + (pow(31, 2) * 0) + (pow(31, 3) * 10) + (pow(31, 4) * 13) + (pow(31, 5) * 15);
 	int in_order_expected = 0 + (pow(31, 1) * 5) + (pow(31, 2) * 10) + (pow(31, 3) * 12) + (pow(31, 4) * 13) + (pow(31, 5) * 15);
-	int post_order_expected = 5 + (pow(31, 1) * 0) + (pow(31, 2) * 12) + (pow(31, 3) * 15) + (pow(31, 4) * 13) + (pow(31, 5) * 10);
+	int post_order_expected = 0 + (pow(31, 1) * 10) + (pow(31, 2) * 5) + (pow(31, 3) * 15) + (pow(31, 4) * 13) + (pow(31, 5) * 12);
 
 	vb_infoln("PRE-ORDER");
+	print_tree(tree, DFS_PRE_ORDER);
 	ds_bst_visit(tree, visit_test, &test, DFS_PRE_ORDER);
 	vb_check_equals_int("check the preorder visit", test.accumulator, pre_order_expected);
 
 	vb_infoln("IN-ORDER");
+	print_tree(tree, DFS_IN_ORDER);
 	reset_test(&test);
 	ds_bst_visit(tree, visit_test, &test, DFS_IN_ORDER);
 	vb_check_equals_int("check the inorder visit", test.accumulator, in_order_expected);
 
 	vb_infoln("POST-ORDER");
 	reset_test(&test);
+	print_tree(tree, DFS_POST_ORDER);
 	ds_bst_visit(tree, visit_test, &test, DFS_POST_ORDER);
 	vb_check_equals_int("check the post order visit", test.accumulator, post_order_expected);
 
@@ -130,6 +138,7 @@ int test_binary_tree() {
 	vb_check_equals_int("check what happens if I try to add a duplicate element", ds_bst_insert(tree, &fifteen), ELEMENT_ALREADY_EXISTS);
 
 	delete_ds_bst(tree);
+
 	return 0;
 }
 
