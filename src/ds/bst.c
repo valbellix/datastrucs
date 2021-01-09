@@ -346,76 +346,72 @@ ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 	return ELEMENT_ALREADY_EXISTS;
 }
 
+static ds_bst_node* delete_node(ds_bst_node* r, const void* element, const size_t element_size) {
+	// recursively look for the node to delete... like in plain BST
+	if (r == NULL)
+		return NULL;
+	else if (r->cmp(element, r->info) < 0)
+		r->left = delete_node(r->left, element, element_size);
+	else if (r->cmp(element, r->info) > 0)
+		r->right = delete_node(r->right, element, element_size);
+	else {
+		if (r->left != NULL && r->right != NULL) {
+			ds_bst_node* successor = in_order_successor(r);
+			memcpy(r->info, successor->info, element_size);
+
+			r->right = delete_node(r->right, successor->info, element_size);
+		}
+		else {
+			ds_bst_node* node = (r->left != NULL) ? r->left : r->right;
+			if (node == NULL) { // is leaf...
+				node = r;
+				r = NULL;
+			}
+			else {
+				memcpy(r->info, node->info, element_size);
+				r->left = node->left;
+				r->right = node->right;
+			}
+
+			delete_ds_bst_node(node);
+		}
+	}
+
+	if (r == NULL)
+		return NULL;
+
+	r->height = 1 + max(node_height(r->left), node_height(r->right));
+
+	// rebalance if necessary...
+	int balance = node_balance(r);
+	if (balance > 1 && node_balance(r->left) >= 0)
+		return rotate_right(r);
+
+	if (balance > 1 && node_balance(r->left) < 0) {
+		r->left = rotate_left(r->left);
+		return rotate_right(r);
+	}
+
+	if (balance < -1 && node_balance(r->right) <= 0)
+		return rotate_left(r);
+	
+	if (balance < -1 && node_balance(r->right) > 0) {
+		r->right = rotate_right(r->right);
+		return rotate_left(r);
+	}
+
+	return r;
+}
+
 ds_result ds_bst_remove(ds_bst* bt, const void* element) {
 	if (bt == NULL)
 		return GENERIC_ERROR;
 	if (bt->root == NULL)
 		return SUCCESS;
 
-	ds_bst_node* to_remove = node_search(bt->cmp, bt->root, element);
-	if (to_remove == NULL)
-		return SUCCESS;
-
-	if (ds_bst_node_is_leaf(to_remove)) {
-		if (to_remove->parent != NULL) {
-			if (to_remove->parent->left == to_remove)
-				to_remove->parent->left = NULL;
-			else
-				to_remove->parent->right = NULL;
-		}
-	}
-	else if (to_remove->left != NULL && to_remove->right == NULL) {
-		// we have just one child node and it is the right one
-		ds_bst_node* child = to_remove->left;
-		child->parent = to_remove->parent;
-
-		if (to_remove->parent != NULL) {
-			if (to_remove->parent->left == to_remove)
-				to_remove->parent->left = child;
-			else
-				to_remove->parent->right = child;
-		}
-	}
-	else if (to_remove->left == NULL && to_remove->right != NULL) {
-		// we have just one child node and it is the right one
-		ds_bst_node* child = to_remove->right;
-		child->parent = to_remove->parent;
-
-		if (to_remove->parent != NULL) {
-			if (to_remove->parent->left == to_remove)
-				to_remove->parent->left = child;
-			else
-				to_remove->parent->right = child;
-		}
-	}
-	else {
-		// we have two children, so we need to swap with its successor
-		// (i.e. the minimum of the right sub-tree)
-		ds_bst_node* successor = get_min(to_remove->right);
-
-		// it may have just a right child
-		if (successor->right != NULL) {
-			if (successor->parent != NULL) {
-				successor->parent->left = successor->right;
-			}
-			successor->right->parent = successor->parent;
-		}
-
-		successor->parent = to_remove->parent;
-		successor->left = to_remove->left;
-		// the right subtree of the successor should not need to be touched
-
-		if (to_remove->parent != NULL) {
-			if (to_remove->parent->left == to_remove)
-				to_remove->parent->left = successor;
-			else
-				to_remove->parent->right = successor;
-		}
-	}
-
-	delete_ds_bst_node(to_remove);
-
+	bt->root = delete_node(bt->root, element, bt->element_size);
 	bt->elements--;
+
 	return SUCCESS;
 }
 

@@ -7,7 +7,7 @@ With all that in mind, I would like a no frills, generic and easy to use library
 Implemented:
 * vector
 * list (double linked list)
-* binary search tree (not balanced... yet)
+* binary search tree (implemented as AVL tree)
 * treemap (some functions and tests are still missing...)
 
 TBD:
