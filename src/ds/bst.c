@@ -26,9 +26,12 @@ struct ds_bst_node {
 	struct ds_bst_node* right;
 };
 
+// The following will make msvc happy
+#ifndef max
 static int max(int i1, int i2) {
 	return (i1 > i2) ? i1 : i2;
 }
+#endif
 
 static int node_height(ds_bst_node* node) {
 	return node != NULL ? node->height : 0;
@@ -346,20 +349,20 @@ ds_result ds_bst_insert(ds_bst* bt, const void* element) {
 	return ELEMENT_ALREADY_EXISTS;
 }
 
-static ds_bst_node* delete_node(ds_bst_node* r, const void* element, const size_t element_size) {
+static ds_bst_node* delete_node(ds_bst_node* r, const void* element, const size_t element_size, char* decrement_count) {
 	// recursively look for the node to delete... like in plain BST
 	if (r == NULL)
 		return NULL;
 	else if (r->cmp(element, r->info) < 0)
-		r->left = delete_node(r->left, element, element_size);
+		r->left = delete_node(r->left, element, element_size, decrement_count);
 	else if (r->cmp(element, r->info) > 0)
-		r->right = delete_node(r->right, element, element_size);
+		r->right = delete_node(r->right, element, element_size, decrement_count);
 	else {
 		if (r->left != NULL && r->right != NULL) {
 			ds_bst_node* successor = in_order_successor(r);
 			memcpy(r->info, successor->info, element_size);
 
-			r->right = delete_node(r->right, successor->info, element_size);
+			r->right = delete_node(r->right, successor->info, element_size, decrement_count);
 		}
 		else {
 			ds_bst_node* node = (r->left != NULL) ? r->left : r->right;
@@ -374,6 +377,7 @@ static ds_bst_node* delete_node(ds_bst_node* r, const void* element, const size_
 			}
 
 			delete_ds_bst_node(node);
+			*decrement_count = 1;
 		}
 	}
 
@@ -409,8 +413,10 @@ ds_result ds_bst_remove(ds_bst* bt, const void* element) {
 	if (bt->root == NULL)
 		return SUCCESS;
 
-	bt->root = delete_node(bt->root, element, bt->element_size);
-	bt->elements--;
+	char decrement_count = 0;
+	bt->root = delete_node(bt->root, element, bt->element_size, &decrement_count);
+	if (decrement_count)
+		bt->elements--;
 
 	return SUCCESS;
 }

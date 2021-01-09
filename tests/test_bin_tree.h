@@ -137,6 +137,10 @@ int test_binary_tree() {
 	vb_check_equals_int("check if element is extracted properly", *((int*)ds_bst_get(tree, &fifteen)), fifteen);
 	vb_check_equals_int("check what happens if I try to add a duplicate element", ds_bst_insert(tree, &fifteen), ELEMENT_ALREADY_EXISTS);
 
+	int twenty = 20;
+	res = ds_bst_remove(tree, &twenty);
+	vb_check_equals_int("check that the tree still has the same number of elements than before (5)", ds_bst_size(tree), 5);
+
 	delete_ds_bst(tree);
 
 	return 0;
