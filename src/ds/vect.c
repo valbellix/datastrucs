@@ -87,13 +87,15 @@ const void* ds_vect_iterator_get(ds_vect_iterator* it) {
 ds_vect* create_ds_vect(ds_cmp func, const size_t element_size) {
 	ds_vect* v = (ds_vect*) malloc(sizeof(ds_vect));
 
-	v->capacity = INITIAL_CAPACITY;
-	v->size = 0;
-	v->factor = LOAD_FACTOR;
-	v->compare = func;
-	v->element_size = element_size;
+	if (v != NULL) {
+		v->capacity = INITIAL_CAPACITY;
+		v->size = 0;
+		v->factor = LOAD_FACTOR;
+		v->compare = func;
+		v->element_size = element_size;
 
-	v->store = malloc(v->capacity * element_size);
+		v->store = malloc(v->capacity * element_size);
+	}
 
 	return v;
 }

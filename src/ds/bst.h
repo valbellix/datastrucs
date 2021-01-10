@@ -61,13 +61,33 @@ void ds_bst_iterator_prev(ds_bst_iterator* it);
 int ds_bst_iterator_is_valid(ds_bst_iterator* it);
 
 /**
- * This function will get the element pointed by the iterator.
+ * This function will get the element pointed by the iterator as const void*.
  *
  * @param it The iterator.
  * 
  * @return The pointer to the element stored into the current element held iterator.
  */
 const void* ds_bst_iterator_get(ds_bst_iterator* it);
+
+/**
+ * This function will get the typed pointer to the element pointed by the iterator.
+ * 
+ * @param TYPE The type we want as output.
+ * @param IT The iterator.
+ * 
+ * @return The pointer to the element stored into the tree casted to the given type.
+ */
+#define ds_bst_iterator_get_ptr(TYPE, IT) ((TYPE*)ds_bst_iterator_get(IT))
+
+/**
+ * This function will get the value of the element pointed by the iterator.
+ *
+ * @param TYPE The type we want as output.
+ * @param IT The iterator.
+ *
+ * @return The value to the element stored into the tree casted to the given type.
+ */
+#define ds_bst_iterator_get_value(TYPE, IT) (*(TYPE*)ds_bst_iterator_get(IT))
 
 /**
  * This function will create a binary tree node by copying the element passed as argument.
@@ -115,13 +135,33 @@ int ds_bst_node_is_leaf(ds_bst_node* node);
 
 
 /**
- * This function will return a pointer to the element stored within the node.
+ * This function will return a pointer to the element stored within the node as const void*.
  *
  * @param node The node.
  * 
  * @return It returns a pointer to the element store within the node.
  */
 const void* ds_bst_node_get(ds_bst_node* node);
+
+/**
+ * This function will get the typed pointer to the element stored within the node.
+ * 
+ * @param TYPE The type we want as output.
+ * @param NODE The node.
+ * 
+ * @return The pointer to the element stored within the node casted to the given type.
+ */
+#define ds_bst_node_get_ptr(TYPE, NODE) ((TYPE*)ds_bst_node_get(NODE))
+
+/**
+ * This function will get the value of the element stored within the node.
+ * 
+ * @param TYPE The type we want as output.
+ * @param NODE The node.
+ * 
+ * @return The value of the element stored within the node casted to the given type.
+ */
+#define ds_bst_node_get_value(TYPE, NODE) (*(TYPE*)ds_bst_node_get(NODE))
 
 // Binary Tree interface
 

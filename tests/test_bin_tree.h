@@ -18,7 +18,7 @@
 #include <ds/bst.h>
 
 void print_element(const void* element, void* func_aux) {
-	printf("%d ", *((int*)element));
+	printf("%d ", ds_get_value(int, element));
 }
 
 void print_tree(ds_bst* bt, ds_visit_type visit_type) {

@@ -54,13 +54,33 @@ void ds_vect_iterator_prev(ds_vect_iterator* it);
 int ds_vect_iterator_is_valid(ds_vect_iterator* it);
 
 /**
- * This function will get the element pointed by the iterator.
+ * This function will get the element pointed by the iterator as const void*.
  *
  * @param it The iterator.
  * 
  * @return The pointer to the element stored into the vector.
  */
 const void* ds_vect_iterator_get(ds_vect_iterator* it);
+
+/**
+ * This function will get the typed pointer to the element pointed by the iterator.
+ * 
+ * @param TYPE The type we want as output.
+ * @param IT The iterator.
+ * 
+ * @return The pointer to the element stored into the vector casted to the given type.
+ */
+#define ds_vect_iterator_get_ptr(TYPE, IT) ((TYPE*)ds_vect_iterator_get(IT))
+
+/**
+ * This function will get the value of the element pointed by the iterator.
+ *
+ * @param TYPE The type we want as output.
+ * @param IT The iterator.
+ *
+ * @return The value to the element stored into the vector casted to the given type.
+ */
+#define ds_vect_iterator_get_value(TYPE, IT) (*(TYPE*)ds_vect_iterator_get(IT))
 
 // Vector interface
 

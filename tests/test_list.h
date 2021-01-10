@@ -17,7 +17,7 @@
 #include <ds/list.h>
 
 void print_list_element(const ds_list_iterator* it) {
-	vb_infoln("%d", *((int*)ds_list_iterator_get(it)));
+	vb_infoln("%d", ds_list_iterator_get_value(int, it));
 }
 
 int run_test_list(ds_list* l) {
@@ -45,7 +45,7 @@ int run_test_list(ds_list* l) {
 	vb_infoln("test forward iteration");
 	int counter = 0;
 	for (ds_list_iterator it = ds_list_first(l); ds_list_iterator_is_valid(&it); ds_list_iterator_next(&it))
-		vb_infoln("[%d] -> %d", counter++, *((int*)ds_list_iterator_get(&it)));
+		vb_infoln("[%d] -> %d", counter++, ds_list_iterator_get_value(int, &it));
 
 	vb_infoln("test do things forward");
 	ds_list_do(l, print_list_element, ds_list_first(l), ds_list_length(l), FORWARD);
@@ -57,7 +57,7 @@ int run_test_list(ds_list* l) {
 	ds_list_iterator positional =  ds_list_at(l, 2);
 	vb_check_equals_int("the element should be valid", ds_list_iterator_is_valid(&positional), 1);
 
-	vb_infoln("Element at position 2 is %d", *((int*)ds_list_iterator_get(&positional)));
+	vb_infoln("Element at position 2 is %d", ds_list_iterator_get_value(int, &positional));
 
 	ds_list_iterator non_valid = ds_list_at(l, 3);
 	vb_check_equals_int("the element should not be valid", ds_list_iterator_is_valid(&non_valid), 0);
