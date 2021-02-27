@@ -2,19 +2,16 @@ cmake_minimum_required(VERSION 3.10)
 
 project(datastructs C)
 
-add_library(datastructs STATIC
+set("SOURCE_FILES"
 	src/ds/vect.c
 	src/ds/list.c
 	src/ds/bst.c
 	src/ds/treemap.c
 )
 
-add_library(datastructsShared SHARED
-	src/ds/vect.c
-	src/ds/list.c
-	src/ds/bst.c
-	src/ds/treemap.c
-)
+add_library(datastructs STATIC ${SOURCE_FILES})
+
+add_library(datastructsShared SHARED ${SOURCE_FILES})
 
 set_target_properties(datastructsShared
 	PROPERTIES OUTPUT_NAME
@@ -44,10 +41,10 @@ target_include_directories(test
 		tests
 )
 
+set("TEST_LIBS" "m")
+
 if (MSVC)
 	set("TEST_LIBS" "")
-else()
-	set("TEST_LIBS" "m")
 endif()
 
 target_link_libraries(test

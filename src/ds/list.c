@@ -28,7 +28,14 @@ struct ds_list {
 static ds_list_node* create_list_node(void* element, const size_t element_size) {
 	ds_list_node* node = (ds_list_node*) malloc(sizeof(ds_list_node));
 
+	if (node == NULL)
+		return node;
+
 	node->data = malloc(element_size);
+	if (node->data == NULL) {
+		free(node);
+		return NULL;
+	}
 	memcpy(node->data, element, element_size);
 
 	node->next = NULL;
@@ -40,6 +47,8 @@ static ds_list_node* create_list_node(void* element, const size_t element_size) 
 static ds_list_node* create_null_node() {
 	ds_list_node* node = (ds_list_node*) malloc(sizeof(ds_list_node));
 
+	if (node == NULL)
+		return node;
 	node->next = NULL;
 	node->prev = NULL;
 
@@ -58,6 +67,8 @@ static void destroy_list_node(ds_list_node* node) {
 
 ds_list* create_ds_list(ds_cmp cmp_func, const size_t size) {
 	ds_list* list = (ds_list*) malloc(sizeof(ds_list));
+	if (list == NULL)
+		return NULL;
 	list->root = NULL;
 	list->size = 0;
 	list->element_size = size;
