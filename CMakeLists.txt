@@ -7,6 +7,7 @@ set("SOURCE_FILES"
 	src/ds/list.c
 	src/ds/bst.c
 	src/ds/treemap.c
+	src/ds/heap.c
 )
 
 add_library(datastructs STATIC ${SOURCE_FILES})

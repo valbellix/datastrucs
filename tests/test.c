@@ -8,6 +8,7 @@
 #include "test_list.h"
 #include "test_vector.h"
 #include "test_bin_tree.h"
+#include "test_heap.h"
 
 #include <stdio.h>
 
@@ -24,6 +25,10 @@ int main() {
 	printf("Test Binary Search Tree\n");
 	printf("**************\n");
 	res = test_binary_tree();
+
+	printf("Test Heap\n");
+	printf("**************\n");
+	res = test_heap();
 
 	printf("**************\n");
 	if (res == 0)
