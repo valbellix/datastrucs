@@ -11,22 +11,23 @@ set("SOURCE_FILES"
 
 add_library(datastructs STATIC ${SOURCE_FILES})
 
-add_library(datastructsShared SHARED ${SOURCE_FILES})
-
-set_target_properties(datastructsShared
-	PROPERTIES OUTPUT_NAME
-		datastructs
-)
-
 target_include_directories(datastructs
 	PRIVATE
 		src/ds
 )
 
-target_include_directories(datastructsShared
-	PRIVATE
-		src/ds
-)
+# I MSVC complaints a lot... need to understand the cause...
+if (!MSVC)
+	add_library(datastructsShared SHARED ${SOURCE_FILES})
+	set_target_properties(datastructsShared
+		PROPERTIES OUTPUT_NAME
+			datastructs
+	)
+	target_include_directories(datastructsShared
+		PRIVATE
+			src/ds
+	)
+endif()
 
 add_executable(test
 	tests/test.c

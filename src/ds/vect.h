@@ -183,6 +183,17 @@ ds_result ds_vect_remove(ds_vect* v, const size_t pos);
 ds_result ds_vect_set(ds_vect* v, const void* element, const size_t pos);
 
 /**
+* This function will swap the elements checking if positions are valid.
+* 
+* @param v The vector.
+* @param pos_one The position of the first element to swap.
+* @param pos_two The position of the second element to swap.
+* 
+* @return SUCCESS if it succeeds, it may return OUT_OF_BOUND if at least one of the index is not valid.
+*/
+ds_result ds_vect_swap(ds_vect* v, const size_t pos_one, const size_t pos_two);
+
+/**
  * This function will call 'do_something' to all elements of the vector starting from the
  * element pointed by the 'begin' vector. It will be executed on all elements between the begin
  * to begin + number_of_elements. The iterator could be incremented or decremented according to the

@@ -169,6 +169,22 @@ ds_result ds_vect_remove(ds_vect* this, const size_t pos) {
 	return GENERIC_ERROR;
 }
 
+ds_result ds_vect_swap(ds_vect* this, const size_t pos_one, const size_t pos_two) {
+	if (pos_one >= this->size || pos_two >= this->size)
+		return OUT_OF_BOUND;
+
+	if (pos_one == pos_two)
+		return SUCCESS;
+
+	void* aux = malloc(this->element_size);
+	memcpy(aux, VECT_AT(this, pos_one), this->element_size);
+	memcpy(VECT_AT(this, pos_one), VECT_AT(this, pos_two), this->element_size);
+	memcpy(VECT_AT(this, pos_two), aux, this->element_size);
+	free(aux);
+
+	return SUCCESS;
+}
+
 void ds_vect_do(ds_vect* this,
                 void (*do_something)(const ds_vect_iterator*),
                 ds_vect_iterator begin,

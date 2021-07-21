@@ -20,6 +20,11 @@ void print_vect_element(const ds_vect_iterator* it) {
 	vb_infoln("[%d] -> %d", it->pos, ds_vect_iterator_get_value(int, it));
 }
 
+void print_forward(ds_vect* v) {
+	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
+		vb_infoln("[%d] -> %d", it.pos, ds_vect_iterator_get_value(int, &it));
+}
+
 int run_test_vector(ds_vect* v) {
 	vb_infoln("test adding elements");
 	int one = 123;
@@ -45,8 +50,7 @@ int run_test_vector(ds_vect* v) {
 	vb_check_equals_int("check if element does not exist", ds_vect_exists(v, &doesNotExist), 0);
 
 	vb_infoln("test forward iteration");
-	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
-		vb_infoln("[%d] -> %d", it.pos, ds_vect_iterator_get_value(int, &it));
+	print_forward(v);
 
 	vb_infoln("test backward iteration");
 	for (ds_vect_iterator it = ds_vect_last(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_prev(&it))
@@ -67,8 +71,19 @@ int run_test_vector(ds_vect* v) {
 	vb_infoln("test remove");
 	ds_vect_remove(v, 1);
 	ds_vect_remove(v, 1);
-	for (ds_vect_iterator it = ds_vect_first(v); ds_vect_iterator_is_valid(&it); ds_vect_iterator_next(&it))
-		vb_infoln("[%d] -> %d", it.pos, *((int*)ds_vect_iterator_get(&it)));
+	print_forward(v);
+
+	vb_infoln("test swap");
+	ds_vect_push_back(v, &two);
+	ds_vect_push_back(v, &three);
+	vb_check_equals_int("check if swap succeed", ds_vect_swap(v, 0, 2), SUCCESS);
+
+	ds_vect_iterator it_pos0 = ds_vect_at(v, 0);
+	ds_vect_iterator it_pos2 = ds_vect_at(v, 2);
+	vb_check_equals_int("check if values have been swapped - test 1", ds_vect_iterator_get_value(int, &it_pos0), three);
+	vb_check_equals_int("check if values have been swapped - test 2", ds_vect_iterator_get_value(int, &it_pos2), one);
+
+	print_forward(v);
 
 	return 0;
 }
