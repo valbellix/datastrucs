@@ -19,6 +19,14 @@
 typedef struct ds_heap ds_heap;
 
 /**
+ * This is an enumeration that represents the type of the heap
+ */
+typedef enum ds_heap_type {
+	MIN_HEAP,
+	MAX_HEAP
+} ds_heap_type;
+
+/**
  * This is an opaque struct that represents an element of an heap
  */
 typedef struct ds_heap_entry {

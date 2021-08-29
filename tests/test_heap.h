@@ -45,8 +45,6 @@ int run_test_heap(ds_heap* heap) {
 		i++;
 	} while (ds_heap_size(heap) != 0);
 
-	
-
 	return 0;
 }
 

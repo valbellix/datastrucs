@@ -14,6 +14,8 @@
 struct ds_heap {
 	ds_vect* v;
 	size_t element_size;
+	ds_heap_type type;
+	size_t(*left_is_up)(ds_vect* h, int left, int right);
 };
 
 // helper functions
@@ -39,7 +41,7 @@ static int parent_index(int index) {
 	return floor(((double)index - 1) / 2);
 }
 
-static size_t left_is_up(ds_vect* h, int left, int right) {
+static size_t min_heap_cmp(ds_vect* h, int left, int right) {
 	ds_vect_iterator left_it = ds_vect_at(h, left);
 	ds_vect_iterator right_it = ds_vect_at(h, right);
 
@@ -50,7 +52,7 @@ static size_t left_is_up(ds_vect* h, int left, int right) {
 	return left_element->priority < right_element->priority;
 }
 
-static void heapify(ds_vect* h, int i) {
+static void heapify(size_t (*left_is_up)(ds_vect*, int, int), ds_vect* h, int i) {
 	int left_index = left_child_index(i);
 	int right_index = right_child_index(i);
 
@@ -63,7 +65,7 @@ static void heapify(ds_vect* h, int i) {
 		upmost_index = right_index;
 	if (upmost_index != i) {
 		ds_vect_swap(h, i, upmost_index);
-		heapify(h, upmost_index);
+		heapify(left_is_up, h, upmost_index);
 	}
 }
 
@@ -81,6 +83,8 @@ ds_heap* create_ds_heap(const size_t element_size) {
 
 	heap->v = create_ds_vect(entry_cmp, sizeof(ds_heap_entry));
 	heap->element_size = element_size;
+	heap->type = MIN_HEAP;
+	heap->left_is_up = min_heap_cmp;
 
 	return heap;
 }
@@ -116,7 +120,7 @@ ds_result ds_heap_push(ds_heap* h, const void* element, const int priority) {
 		return SUCCESS;
 	}
 
-	while (left_is_up(h->v, current, parent)) {
+	while (h->left_is_up(h->v, current, parent)) {
 		ds_vect_swap(h->v, current, parent);
 
 		current = parent;
@@ -146,7 +150,7 @@ ds_heap_entry ds_heap_pop(ds_heap* h) {
 	else {
 		ds_vect_swap(h->v, 0, array_size-1);
 		ds_vect_remove(h->v, array_size - 1);
-		heapify(h->v, 0);
+		heapify(h->left_is_up, h->v, 0);
 	}
 
 	return entry;
