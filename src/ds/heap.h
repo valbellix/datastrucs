@@ -44,11 +44,12 @@ void delete_ds_heap_entry(ds_heap_entry* entry);
 /**
  * This function will create an instance of ds_heap.
  * 
+ * @param type the heap type determine if it will be a min-heap or a max-heap
  * @param element_size It is the size of the element to held within the heap.
  * 
  * @return It returns an instance of the heap.
  */
-ds_heap* create_ds_heap(const size_t element_size);
+ds_heap* create_ds_heap(ds_heap_type type, const size_t element_size);
 
 /**
  * This function will release the memory allocated to the heap.
@@ -66,6 +67,15 @@ void delete_ds_heap(ds_heap* h);
  * @return It returns the number of elements in the heap.
  */
 size_t ds_heap_size(ds_heap* h);
+
+/**
+ * This function will return the type of the heap
+ * 
+ * @param h The heap.
+ * 
+ * @return It returns if the heap is a min-heap or a max-heap
+ */
+ds_heap_type ds_heap_get_type(ds_heap* h);
 
 /**
  * This function will pop the first element of the heap. It returns and removes it.

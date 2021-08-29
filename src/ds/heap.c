@@ -48,8 +48,17 @@ static size_t min_heap_cmp(ds_vect* h, int left, int right) {
 	ds_heap_entry* left_element = ds_vect_iterator_get_ptr(ds_heap_entry, &left_it);
 	ds_heap_entry* right_element = ds_vect_iterator_get_ptr(ds_heap_entry, &right_it);
 
-	// later on it will be changed to be a max heap as well...
 	return left_element->priority < right_element->priority;
+}
+
+static size_t max_heap_cmp(ds_vect* h, int left, int right) {
+	ds_vect_iterator left_it = ds_vect_at(h, left);
+	ds_vect_iterator right_it = ds_vect_at(h, right);
+
+	ds_heap_entry* left_element = ds_vect_iterator_get_ptr(ds_heap_entry, &left_it);
+	ds_heap_entry* right_element = ds_vect_iterator_get_ptr(ds_heap_entry, &right_it);
+
+	return left_element->priority > right_element->priority;
 }
 
 static void heapify(size_t (*left_is_up)(ds_vect*, int, int), ds_vect* h, int i) {
@@ -76,15 +85,15 @@ void delete_ds_heap_entry(ds_heap_entry* entry) {
 		free(entry->info);
 }
 
-ds_heap* create_ds_heap(const size_t element_size) {
+ds_heap* create_ds_heap(ds_heap_type type, const size_t element_size) {
 	ds_heap* heap = (ds_heap*)malloc(sizeof(ds_heap));
 	if (heap == NULL)
 		return NULL;
 
 	heap->v = create_ds_vect(entry_cmp, sizeof(ds_heap_entry));
 	heap->element_size = element_size;
-	heap->type = MIN_HEAP;
-	heap->left_is_up = min_heap_cmp;
+	heap->type = type;
+	heap->left_is_up = (heap->type == MAX_HEAP) ? max_heap_cmp : min_heap_cmp;
 
 	return heap;
 }
@@ -102,6 +111,10 @@ void delete_ds_heap(ds_heap* h) {
 
 size_t ds_heap_size(ds_heap* h) {
 	return ds_vect_length(h->v);
+}
+
+ds_heap_type ds_heap_get_type(ds_heap* h) {
+	return h->type;
 }
 
 ds_result ds_heap_push(ds_heap* h, const void* element, const int priority) {

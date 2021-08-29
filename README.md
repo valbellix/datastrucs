@@ -9,7 +9,7 @@ Implemented:
 * list (double linked list)
 * binary search tree (implemented as AVL tree)
 * treemap (some functions and tests are still missing...)
-* heap (implemented as binary min-heap)
+* min-heap and max-heap (both implemented as binary heap)
 
 TBD:
 * hash table
